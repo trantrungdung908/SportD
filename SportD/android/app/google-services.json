@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "1065419826533",
+    "project_id": "sportapp-54c66",
+    "storage_bucket": "sportapp-54c66.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1065419826533:android:64517dd5b6cfb9e4c6ed8c",
+        "android_client_info": {
+          "package_name": "com.sportd"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1065419826533-ih2druvfmrbiu7mk6eb45vdj02m8j9l8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sportd",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "1065419826533-bquoujjf78s1ngkb3tk6nabet5r0ccld.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDjKyCGNw7HExSs4KwKNlO43HBGeKiqTmg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1065419826533-bquoujjf78s1ngkb3tk6nabet5r0ccld.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1065419826533-7ku3mhim5tkkiol7sm9k80o775pe9kid.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.reactjs.native.example.SportD"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
