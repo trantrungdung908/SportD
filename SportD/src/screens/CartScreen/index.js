@@ -89,7 +89,13 @@ const CartScreen = () => {
               <Text style={styles.text_Total}>Total</Text>
               <Text style={styles.text_Total}>${total}</Text>
             </View>
-            <TouchableOpacity style={styles.btnCheck}>
+            <TouchableOpacity
+              style={styles.btnCheck}
+              onPress={() => {
+                if (total > 0) {
+                  navigation.navigate('CheckOutScreen');
+                }
+              }}>
               <Text style={styles.textCheck}>Checkout</Text>
             </TouchableOpacity>
           </View>

@@ -23,6 +23,8 @@ import {
 import firestore from '@react-native-firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useDispatch} from 'react-redux';
 const ProfileScreen = () => {
@@ -33,7 +35,6 @@ const ProfileScreen = () => {
   // console.log('userinfo', userInfor);
   const [loading, setLoading] = useState(true);
 
-  // handleLogOut
   const alertLogOut = () => {
     Alert.alert(
       'Are you sure?',
@@ -195,7 +196,11 @@ const ProfileScreen = () => {
                 navigation.navigate('WishListScreen');
               }}>
               <Ionicons name="heart-outline" style={styles.iconBtn} />
-              <Text style={styles.textBtn}>Your Favourites</Text>
+              <Text style={styles.textBtn}>Favourites</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.btnAll}>
+              <FontAwesome5 name="box-open" style={styles.iconBtn} />
+              <Text style={styles.textBtn}>Orders history</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.btnAll}>
               <Ionicons name="settings-outline" style={styles.iconBtn} />

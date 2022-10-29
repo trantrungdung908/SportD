@@ -17,6 +17,7 @@ import ProfileScreen from '../../screens/ProfileScreen';
 import EditProfileScreen from '../../screens/ProfileScreen/components';
 import FilterScreen from '../../screens/FilterScreen';
 import ReviewsScreen from '../../screens/ReviewsScreen';
+import CheckOutScreen from '../../screens/CheckOutScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import colors from '../../constants/colors';
@@ -88,11 +89,12 @@ const MainStack = () => {
           }}
         />
         <Tab.Screen
-          name="CartScreen"
-          component={CartScreen}
+          name="CartStackScreen"
+          component={CartStackScreen}
           options={{
-            title: 'My Cart',
-            headerTitleAlign: 'center',
+            headerShown: false,
+            // title: 'My Cart',
+            // headerTitleAlign: 'center',
             tabBarBadge:
               cartData?.length > 0
                 ? cartData.reduce((p, c) => p + c.quantity, 0)
@@ -249,9 +251,10 @@ const MainStack = () => {
 
 export default MainStack;
 
-const ProfileStack = createNativeStackNavigator();
 const HomeStack = createNativeStackNavigator();
+const CartStack = createNativeStackNavigator();
 const WishListStack = createNativeStackNavigator();
+const ProfileStack = createNativeStackNavigator();
 
 const ProfileStackScreen = ({navigation}) => {
   return (
@@ -441,6 +444,55 @@ const HomeStackScreen = ({navigation}) => {
         })}
       />
     </HomeStack.Navigator>
+  );
+};
+
+const CartStackScreen = ({navigation}) => {
+  return (
+    <CartStack.Navigator
+      screenOptions={{
+        headerShadowVisible: false,
+        tabBarHideOnKeyboard: true,
+        tabBarShowLabel: false,
+        headerBackTitleVisible: false,
+        headerTintColor: '#000',
+        // cardOverlayEnabled: true,
+        // ...TransitionPresets.ModalPresentationIOS,
+      }}>
+      <CartStack.Screen
+        options={{
+          // headerShown: false,
+          headerTitleAlign: 'center',
+          title: 'My Cart',
+        }}
+        name="CartScreen"
+        component={CartScreen}
+      />
+      <CartStack.Screen
+        options={{
+          title: 'Check out',
+          headerTitleAlign: 'center',
+          headerLeft: () => {
+            return (
+              <View>
+                <FontAwesome.Button
+                  underlayColor="#fff"
+                  name="long-arrow-left"
+                  size={Platform.OS === 'ios' ? 25 : 22}
+                  color="#333"
+                  backgroundColor={'#fff'}
+                  onPress={() => {
+                    navigation.navigate('CartScreen');
+                  }}
+                />
+              </View>
+            );
+          },
+        }}
+        name="CheckOutScreen"
+        component={CheckOutScreen}
+      />
+    </CartStack.Navigator>
   );
 };
 

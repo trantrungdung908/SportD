@@ -32,7 +32,9 @@ const DetailsScreen = props => {
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const [isSelected, setIsSelected] = useState();
   const [selectSize, setSelectSize] = useState();
-
+  const [review, setReview] = useState([]);
+  const averageRating =
+    review?.reduce((total, next) => total + next.rating, 0) / review?.length;
   //handle indexSlide
   const updateCurrentSlideIndex = e => {
     const contentOffsetX = e.nativeEvent.contentOffset.x;
@@ -95,6 +97,7 @@ const DetailsScreen = props => {
             setIsSelected();
           })
           .catch(err => {
+            console.log('NULL');
             console.log(err.code);
           });
       }
@@ -120,6 +123,8 @@ const DetailsScreen = props => {
             setIsSelected();
           })
           .catch(err => {
+            console.log('<<<<<NULL');
+
             console.log(err.code);
           });
       } else {
@@ -136,7 +141,86 @@ const DetailsScreen = props => {
       }
     }
   };
+  // const renderReview = ({item}) => {
+  //   return (
+  //     <View
+  //       style={{
+  //         marginTop: 5,
+  //         borderColor: '#ccc',
+  //         borderWidth: 1,
+  //         borderRadius: 5,
+  //         height: 100,
+  //         width: windowWeight - 50,
+  //         padding: 10,
+  //         marginRight: 10,
+  //       }}>
+  //       <View
+  //         style={{
+  //           flexDirection: 'row',
+  //           justifyContent: 'space-between',
+  //           marginBottom: 5,
+  //           alignItems: 'center',
+  //         }}>
+  //         <Text style={{color: colors.primaryColor}}>{item.rating}⭐️</Text>
+  //         <Text>{item?.name}</Text>
+  //       </View>
+  //       <Text
+  //         style={{
+  //           color: colors.primaryColor,
+  //           fontWeight: 'bold',
+  //           fontFamily: 'Poppins-Regular',
+  //         }}>
+  //         {item?.title}
+  //       </Text>
+  //       <Text
+  //         style={{
+  //           color: colors.primaryColor,
+  //         }}>
+  //         {item?.message}
+  //       </Text>
 
+  //       {/* {item.message.map(data => {
+  //         return (
+  //           <View
+  //             key={data.reviewAt.seconds}
+  //             style={{
+  //               borderRadius: 5,
+  //               marginBottom: 10,
+  //               width: windowWeight - 150,
+  //             }}>
+  //             <View
+  //               style={{
+  //                 flexDirection: 'row',
+  //                 justifyContent: 'space-between',
+  //                 marginBottom: 5,
+  //                 alignItems: 'center',
+  //               }}>
+  //               <Text style={{color: colors.primaryColor}}>
+  //                 {data.rating}⭐️
+  //               </Text>
+  //               <Text>{data.name}</Text>
+  //             </View>
+  //             <Text
+  //               style={{
+  //                 color: colors.primaryColor,
+  //                 fontWeight: 'bold',
+  //                 fontFamily: 'Poppins-Regular',
+  //               }}>
+  //               {data.title}
+  //             </Text>
+  //             <Text
+  //               numberOfLines={2}
+  //               style={{
+  //                 color: colors.primaryColor,
+  //               }}>
+  //               {data.message}
+  //             </Text>
+  //           </View>
+  //         );
+  //       })} */}
+  //     </View>
+  //   );
+  // };
   useEffect(() => {
     const subscriber = firestore()
       .collection(`cart-${userId}`)
@@ -149,6 +233,23 @@ const DetailsScreen = props => {
           });
         });
         setItemInCart(cartData);
+      });
+    return () => subscriber();
+  }, []);
+
+  useEffect(() => {
+    const subscriber = firestore()
+      .collection(`review`)
+      .where('idProduct', '==', `${detailsData?.key}`)
+      .onSnapshot(querySnapshot => {
+        const reviewData = [];
+        querySnapshot.forEach(documentSnapshot => {
+          reviewData.push({
+            ...documentSnapshot.data(),
+            key: documentSnapshot.id,
+          });
+        });
+        setReview(reviewData);
       });
     return () => subscriber();
   }, []);
@@ -181,7 +282,32 @@ const DetailsScreen = props => {
             alignItems: 'center',
           }}>
           <Text style={styles.textCategory}>{detailsData.subCategory}</Text>
-          <Text style={styles.textCategory}>5 🌟</Text>
+          {/* <Text style={styles.textCategory}>5 🌟</Text> */}
+          {review?.length > 0 ? (
+            <Text
+              style={{
+                textAlign: 'center',
+                fontSize: 14,
+                fontFamily: 'Poppins-Regular',
+                color: colors.primaryColor,
+              }}>
+              {Math.floor(averageRating) +
+                (Math.round(averageRating - Math.floor(averageRating))
+                  ? 0.5
+                  : 0.0)}{' '}
+              ⭐️ ({review.length})
+            </Text>
+          ) : (
+            <Text
+              style={{
+                textAlign: 'center',
+                fontSize: 14,
+                fontFamily: 'Poppins-Regular',
+                color: colors.primaryColor,
+              }}>
+              0 ⭐️ ({review.length})
+            </Text>
+          )}
         </View>
 
         <Text style={styles.textName}>{detailsData.name}</Text>
@@ -216,14 +342,24 @@ const DetailsScreen = props => {
             alignItems: 'center',
             justifyContent: 'space-between',
           }}>
-          <Text style={styles.textReviews}>Reviews</Text>
+          <Text style={styles.textReviews}>Reviews ({review?.length})</Text>
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate('ReviewsScreen');
+              navigation.navigate('ReviewsScreen', {
+                item: detailsData,
+              });
             }}>
             <Text style={styles.textReviews}>View all</Text>
           </TouchableOpacity>
         </View>
+        {/* {review?.length > 0 ? (
+          <FlatList
+            horizontal
+            data={review}
+            showsHorizontalScrollIndicator={false}
+            renderItem={renderReview}
+          />
+        ) : null} */}
       </View>
       {/* Add to cart */}
       <View style={styles.viewBtn}>
