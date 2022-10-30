@@ -307,7 +307,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Light',
     color: '#292444',
   },
-  view_Header: {marginTop: 15, marginHorizontal: 20},
+  view_Header: {marginTop: 15, marginHorizontal: 20, width: windowWeight - 50},
   text_Header: {
     fontSize: 28,
     fontFamily: 'Poppins-Bold',
