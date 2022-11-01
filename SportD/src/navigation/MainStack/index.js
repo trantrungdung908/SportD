@@ -18,6 +18,7 @@ import EditProfileScreen from '../../screens/ProfileScreen/components';
 import FilterScreen from '../../screens/FilterScreen';
 import ReviewsScreen from '../../screens/ReviewsScreen';
 import CheckOutScreen from '../../screens/CheckOutScreen';
+import OrderSuccess from '../../screens/OrderSuccess';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import colors from '../../constants/colors';
@@ -491,6 +492,13 @@ const CartStackScreen = ({navigation}) => {
         }}
         name="CheckOutScreen"
         component={CheckOutScreen}
+      />
+      <CartStack.Screen
+        options={{
+          headerShown: false,
+        }}
+        name="OrderSuccess"
+        component={OrderSuccess}
       />
     </CartStack.Navigator>
   );

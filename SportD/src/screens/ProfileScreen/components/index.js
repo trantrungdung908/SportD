@@ -255,7 +255,7 @@ const EditProfileScreen = () => {
               </ImageBackground>
             </View>
           </TouchableOpacity>
-          <TextInput
+          {/* <TextInput
             editable={false}
             style={{
               marginTop: 10,
@@ -263,7 +263,7 @@ const EditProfileScreen = () => {
               fontWeight: 'bold',
               fontFamily: 'Poppins-Regular',
               color: colors.primaryColor,
-            }}></TextInput>
+            }}></TextInput> */}
         </View>
 
         <View style={styles.action}>

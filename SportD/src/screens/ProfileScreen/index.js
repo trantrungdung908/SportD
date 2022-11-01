@@ -7,6 +7,7 @@ import {
   ScrollView,
   Image,
   Alert,
+  Platform,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
@@ -138,7 +139,7 @@ const ProfileScreen = () => {
             borderBottomWidth: 1,
             borderColor: '#f2f2f2',
           }}>
-          <View style={styles.viewRow}>
+          <View style={[styles.viewRowIos, {marginTop: 20}]}>
             <Image
               style={styles.imgAva}
               source={{
@@ -151,7 +152,7 @@ const ProfileScreen = () => {
             <Text style={styles.textName}>{userInfor?.displayName}</Text>
           </View>
           {userInfor?.city || userInfor?.country != '' ? (
-            <View style={styles.viewRow}>
+            <View style={[styles.viewRowIos, {marginTop: 20}]}>
               <MaterialCommunityIcons
                 name="map-marker-radius-outline"
                 style={styles.styleIcon}
@@ -161,7 +162,7 @@ const ProfileScreen = () => {
               </Text>
             </View>
           ) : (
-            <View style={styles.viewRow}>
+            <View style={[styles.viewRowIos, {marginTop: 20}]}>
               <MaterialCommunityIcons
                 name="map-marker-radius-outline"
                 style={styles.styleIcon}
@@ -169,7 +170,12 @@ const ProfileScreen = () => {
             </View>
           )}
 
-          <View style={styles.viewRow}>
+          <View
+            style={
+              Platform.OS === 'ios'
+                ? [styles.viewRowIos, {marginTop: 20}]
+                : [styles.viewRowIos, {marginBottom: 10, marginTop: 5}]
+            }>
             <Ionicons name="mail" style={styles.styleIcon} />
             <Text style={styles.textInfo}>{userInfor?.email}</Text>
           </View>
@@ -233,13 +239,14 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
-  viewRow: {
+  viewRowIos: {
     marginHorizontal: 20,
-    marginTop: 20,
     flexDirection: 'row',
     alignItems: 'center',
+    // marginTop: 20,
     // backgroundColor: 'red',
   },
+
   imgAva: {width: 100, height: 100, borderRadius: 50},
   textName: {
     fontSize: 22,

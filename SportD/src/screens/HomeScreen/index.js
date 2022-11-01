@@ -195,7 +195,7 @@ const HomeScreen = props => {
   return (
     <SafeAreaView style={styles.container}>
       {/* Status bar */}
-      <FocusAwareStatusBar backgroundColor="#F2F2F2" barStyle="dark-content" />
+      <FocusAwareStatusBar backgroundColor="#FFF" barStyle="dark-content" />
       {loading === false && categories.length > 0 ? (
         <ScrollView style={styles.container}>
           {/* Search */}
@@ -276,6 +276,7 @@ export default HomeScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#fff',
   },
   view_Line: {
     flex: 1,

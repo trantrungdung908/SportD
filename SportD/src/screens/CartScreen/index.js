@@ -93,7 +93,10 @@ const CartScreen = () => {
               style={styles.btnCheck}
               onPress={() => {
                 if (total > 0) {
-                  navigation.navigate('CheckOutScreen');
+                  navigation.navigate('CheckOutScreen', {
+                    cartData,
+                    total,
+                  });
                 }
               }}>
               <Text style={styles.textCheck}>Checkout</Text>

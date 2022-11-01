@@ -5,4 +5,5 @@ export default {
   checkSuccess: require('../assets/images/checkSuccess.webp'),
   checkFail: require('../assets/images/rejected.png'),
   forgetPass: require('../assets/images/forgotten_login.png'),
+  successOrder: require('../assets/images/successOrder.png'),
 };
