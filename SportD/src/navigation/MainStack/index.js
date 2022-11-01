@@ -19,6 +19,7 @@ import FilterScreen from '../../screens/FilterScreen';
 import ReviewsScreen from '../../screens/ReviewsScreen';
 import CheckOutScreen from '../../screens/CheckOutScreen';
 import OrderSuccess from '../../screens/OrderSuccess';
+import OrderHistoryScreen from '../../screens/OrderHistoryScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import colors from '../../constants/colors';
@@ -297,6 +298,30 @@ const ProfileStackScreen = ({navigation}) => {
         }}
         name="EditProfileScreen"
         component={EditProfileScreen}
+      />
+      <ProfileStack.Screen
+        options={{
+          title: 'Order History ',
+          headerTitleAlign: 'center',
+          headerLeft: () => {
+            return (
+              <View>
+                <FontAwesome.Button
+                  underlayColor="#fff"
+                  name="long-arrow-left"
+                  size={Platform.OS === 'ios' ? 25 : 22}
+                  color="#333"
+                  backgroundColor={'#fff'}
+                  onPress={() => {
+                    navigation.navigate('ProfileScreen');
+                  }}
+                />
+              </View>
+            );
+          },
+        }}
+        name="OrderHistoryScreen"
+        component={OrderHistoryScreen}
       />
     </ProfileStack.Navigator>
   );

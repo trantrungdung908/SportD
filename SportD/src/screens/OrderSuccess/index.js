@@ -8,11 +8,7 @@ import {
 } from 'react-native';
 import React from 'react';
 import {colors, images} from '../../constants';
-import {
-  useNavigation,
-  StackActions,
-  CommonActions,
-} from '@react-navigation/native';
+import {useNavigation, StackActions} from '@react-navigation/native';
 
 const windowWeight = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -55,20 +51,21 @@ const OrderSuccess = () => {
             justifyContent: 'center',
             alignItems: 'center',
           }}>
-          <TouchableOpacity>
-            <Text>Track My Order</Text>
+          <TouchableOpacity
+            style={styles.btn}
+            onPress={() => {
+              navigation.dispatch(StackActions.popToTop());
+              navigation.navigate('OrderHistoryScreen');
+            }}>
+            <Text style={styles.text}>Track My Order</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={{marginTop: 20}}
+            style={[styles.btn, {marginTop: 10}]}
             onPress={() => {
-              //   navigation.reset(
-              //     {
-              //         index:0,
-              //         routeNames : ['']
-              //     }
-              //   )
+              navigation.dispatch(StackActions.popToTop());
+              navigation.navigate('HomeScreen');
             }}>
-            <Text>Return Home</Text>
+            <Text style={styles.text}>Return Home</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -82,5 +79,20 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FFF',
+  },
+  btn: {
+    // marginTop: 20,
+    backgroundColor: '#5956E9',
+    width: 200,
+    height: 50,
+    borderRadius: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
+  },
+  text: {
+    color: '#fff',
+    fontFamily: 'Poppins-Regular',
+    fontSize: 16,
   },
 });

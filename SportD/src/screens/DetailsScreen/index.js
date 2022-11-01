@@ -29,7 +29,7 @@ const DetailsScreen = props => {
 
   const [detailsData, setDetailsData] = useState(detailsItem);
   const [itemInCart, setItemInCart] = useState([]);
-  console.log('itemInCart', itemInCart);
+  // console.log('itemInCart', itemInCart);
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const [isSelected, setIsSelected] = useState();
   const [selectSize, setSelectSize] = useState();

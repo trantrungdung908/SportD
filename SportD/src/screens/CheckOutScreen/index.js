@@ -11,6 +11,7 @@ import React, {useState, useEffect} from 'react';
 import {useSelector} from 'react-redux';
 import firestore from '@react-native-firebase/firestore';
 import colors from '../../constants/colors';
+import Loading from '../components/Loading';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
@@ -20,10 +21,12 @@ const CheckOutScreen = () => {
   const userId = useSelector(state => state.login.currentUser.uid);
   const navigation = useNavigation();
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(false);
   const route = useRoute();
   const {params} = route;
 
   const handlePay = async () => {
+    setLoading(true);
     const docRef = firestore()
       .collection('orders')
       .doc(new Date().getTime().toString());
@@ -50,6 +53,7 @@ const CheckOutScreen = () => {
             });
           });
         setTimeout(() => {
+          setLoading(false);
           navigation.navigate('OrderSuccess');
         }, 1500);
       })
@@ -201,17 +205,6 @@ const CheckOutScreen = () => {
               }}>
               Payment Method
             </Text>
-            <TouchableOpacity>
-              <Text
-                style={{
-                  fontSize: 14,
-                  color: colors.primaryColor,
-                  fontFamily: 'Poppins-Regular',
-                  fontWeight: '400',
-                }}>
-                Change
-              </Text>
-            </TouchableOpacity>
           </View>
           <View
             style={{
@@ -236,6 +229,22 @@ const CheckOutScreen = () => {
           </TouchableOpacity>
         </View>
       </ScrollView>
+      {loading ? (
+        <View
+          style={{
+            backgroundColor: 'black',
+            position: 'absolute',
+            opacity: 0.6,
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '100%',
+            width: '100%',
+          }}>
+          <Loading />
+        </View>
+      ) : (
+        <></>
+      )}
     </SafeAreaView>
   );
 };

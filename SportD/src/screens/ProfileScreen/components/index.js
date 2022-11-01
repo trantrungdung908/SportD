@@ -8,6 +8,7 @@ import {
   StyleSheet,
   Platform,
   Alert,
+  ScrollView,
 } from 'react-native';
 import {colors} from '../../../constants';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -255,17 +256,7 @@ const EditProfileScreen = () => {
               </ImageBackground>
             </View>
           </TouchableOpacity>
-          {/* <TextInput
-            editable={false}
-            style={{
-              marginTop: 10,
-              fontSize: 18,
-              fontWeight: 'bold',
-              fontFamily: 'Poppins-Regular',
-              color: colors.primaryColor,
-            }}></TextInput> */}
         </View>
-
         <View style={styles.action}>
           <Feather name="user" color={'#000'} size={20} />
           <TextInput

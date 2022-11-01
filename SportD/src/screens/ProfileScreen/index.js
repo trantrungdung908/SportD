@@ -199,12 +199,16 @@ const ProfileScreen = () => {
             <TouchableOpacity
               style={styles.btnAll}
               onPress={() => {
-                navigation.navigate('WishListScreen');
+                navigation.navigate('WishListStackScreen');
               }}>
               <Ionicons name="heart-outline" style={styles.iconBtn} />
               <Text style={styles.textBtn}>Favourites</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.btnAll}>
+            <TouchableOpacity
+              style={styles.btnAll}
+              onPress={() => {
+                navigation.navigate('OrderHistoryScreen');
+              }}>
               <FontAwesome5 name="box-open" style={styles.iconBtn} />
               <Text style={styles.textBtn}>Orders history</Text>
             </TouchableOpacity>
