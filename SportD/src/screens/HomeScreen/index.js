@@ -200,7 +200,7 @@ const HomeScreen = props => {
         <ScrollView style={styles.container}>
           {/* Search */}
           <View style={styles.view_Line}>
-            <View style={styles.view_Search}>
+            {/* <View style={styles.view_Search}>
               <Ionicons name="search-outline" style={styles.icon_Search} />
               {Platform.OS === 'ios' ? (
                 <TextInput
@@ -217,7 +217,7 @@ const HomeScreen = props => {
                   style={styles.input_Search}
                 />
               )}
-            </View>
+            </View> */}
             <View style={styles.view_Header}>
               <Text style={styles.text_Header}>Find your best equipment</Text>
             </View>

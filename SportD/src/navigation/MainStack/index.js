@@ -91,6 +91,34 @@ const MainStack = () => {
           }}
         />
         <Tab.Screen
+          options={{
+            headerShown: false,
+            tabBarIcon: ({focused}) => (
+              <View>
+                <Ionicons
+                  name="search-outline"
+                  style={[
+                    styles.tabIconStyle,
+                    [focused ? {color: colors.btnColor} : {color: '#000'}],
+                  ]}
+                />
+                {focused ? (
+                  <Text
+                    style={[
+                      styles.textStyle,
+                      [focused ? {color: colors.btnColor} : {color: '#000'}],
+                    ]}>
+                    Search
+                  </Text>
+                ) : null}
+              </View>
+            ),
+          }}
+          name="SearchStackScreen"
+          component={SearchStackScreen}
+        />
+
+        <Tab.Screen
           name="CartStackScreen"
           component={CartStackScreen}
           options={{
@@ -127,35 +155,6 @@ const MainStack = () => {
             ),
           }}
         />
-        {/* <Tab.Screen
-          name="WishListScreen"
-          component={WishListScreen}
-          options={{
-            title: 'Favourites',
-            headerTitleAlign: 'center',
-            headerShown: false,
-            tabBarIcon: ({focused}) => (
-              <View>
-                <Ionicons
-                  name="heart"
-                  style={[
-                    styles.tabIconStyle,
-                    [focused ? {color: colors.btnColor} : {color: '#000'}],
-                  ]}
-                />
-                {focused ? (
-                  <Text
-                    style={[
-                      styles.textStyle,
-                      [focused ? {color: colors.btnColor} : {color: '#000'}],
-                    ]}>
-                    Favourites
-                  </Text>
-                ) : null}
-              </View>
-            ),
-          }}
-        /> */}
         <Tab.Screen
           name="WishListStackScreen"
           component={WishListStackScreen}
@@ -254,6 +253,7 @@ const MainStack = () => {
 export default MainStack;
 
 const HomeStack = createNativeStackNavigator();
+const SearchStack = createNativeStackNavigator();
 const CartStack = createNativeStackNavigator();
 const WishListStack = createNativeStackNavigator();
 const ProfileStack = createNativeStackNavigator();
@@ -346,14 +346,6 @@ const HomeStackScreen = ({navigation}) => {
         name="HomeScreen"
         component={HomeScreen}
       />
-      <HomeStack.Screen
-        options={{
-          presentation: 'transparentModal',
-          headerShown: false,
-        }}
-        name="FilterScreen"
-        component={FilterScreen}
-      />
 
       <HomeStack.Screen
         name="Products"
@@ -384,27 +376,27 @@ const HomeStackScreen = ({navigation}) => {
               </View>
             );
           },
-          headerRight: () => {
-            return (
-              <View>
-                <FontAwesome.Button
-                  underlayColor="#fff"
-                  name="filter"
-                  style={{
-                    marginLeft: -5,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}
-                  size={Platform.OS === 'ios' ? 22 : 20}
-                  color="#333"
-                  backgroundColor={'#fff'}
-                  onPress={() => {
-                    navigation.navigate('FilterScreen');
-                  }}
-                />
-              </View>
-            );
-          },
+          // headerRight: () => {
+          //   return (
+          //     <View>
+          //       <Ionicons.Button
+          //         underlayColor="#fff"
+          //         name="search-outline"
+          //         style={{
+          //           marginLeft: -5,
+          //           justifyContent: 'center',
+          //           alignItems: 'center',
+          //         }}
+          //         size={Platform.OS === 'ios' ? 22 : 20}
+          //         color="#333"
+          //         backgroundColor={'#fff'}
+          //         onPress={() => {
+          //           navigation.navigate('FilterScreen');
+          //         }}
+          //       />
+          //     </View>
+          //   );
+          // },
         })}
       />
       <HomeStack.Screen
@@ -470,6 +462,91 @@ const HomeStackScreen = ({navigation}) => {
         })}
       />
     </HomeStack.Navigator>
+  );
+};
+
+const SearchStackScreen = ({navigation}) => {
+  return (
+    <SearchStack.Navigator
+      screenOptions={{
+        headerShadowVisible: false,
+        tabBarHideOnKeyboard: true,
+        tabBarShowLabel: false,
+        headerBackTitleVisible: false,
+        headerTintColor: '#000',
+        // cardOverlayEnabled: true,
+        // ...TransitionPresets.ModalPresentationIOS,
+      }}>
+      <SearchStack.Screen
+        options={{
+          headerShown: false,
+        }}
+        name="FilterScreen"
+        component={FilterScreen}
+      />
+      <SearchStack.Screen
+        name="DetailsScreen"
+        component={DetailsScreen}
+        options={({route}) => ({
+          title: route.params.titleHeader,
+          headerBackTitleVisible: false,
+          headerTitleAlign: 'center',
+          headerTintColor: '#292444',
+          headerTitleStyle: {
+            fontWeight: '300',
+            fontSize: 14,
+            fontFamily: 'Poppins-Light',
+          },
+          headerLeft: () => {
+            return (
+              <View>
+                <FontAwesome.Button
+                  name="long-arrow-left"
+                  style={{marginLeft: -5}}
+                  size={Platform.OS === 'ios' ? 25 : 22}
+                  color="#333"
+                  backgroundColor={'#fff'}
+                  onPress={() => {
+                    navigation.navigate('FilterScreen');
+                  }}
+                />
+              </View>
+            );
+          },
+        })}
+      />
+      <SearchStack.Screen
+        name="ReviewsScreen"
+        component={ReviewsScreen}
+        options={({route}) => ({
+          title: 'Reviews',
+          headerBackTitleVisible: false,
+          headerTitleAlign: 'center',
+          headerTintColor: '#292444',
+          headerTitleStyle: {
+            fontWeight: '300',
+            fontSize: 16,
+            fontFamily: 'Poppins-Light',
+          },
+          headerLeft: () => {
+            return (
+              <View>
+                <FontAwesome.Button
+                  name="long-arrow-left"
+                  style={{marginLeft: -5}}
+                  size={Platform.OS === 'ios' ? 25 : 22}
+                  color="#333"
+                  backgroundColor={'#fff'}
+                  onPress={() => {
+                    navigation.goBack();
+                  }}
+                />
+              </View>
+            );
+          },
+        })}
+      />
+    </SearchStack.Navigator>
   );
 };
 

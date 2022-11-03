@@ -6,11 +6,33 @@ import {
   ScrollView,
   FlatList,
 } from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import colors from '../../../constants/colors';
+import firestore from '@react-native-firebase/firestore';
 
 const SubCategory = props => {
-  const {data, page, setPage} = props;
+  const {data, page, setPage, title} = props;
+
+  const [subCategories, setSubCategories] = useState([]);
+
+  useEffect(() => {
+    const subscriber = firestore()
+      .collection('categories')
+      .where('catName', '==', `${title}`)
+      .onSnapshot(querySnapshot => {
+        const dataSub = [];
+        querySnapshot.forEach(documentSnapshot => {
+          dataSub.push({
+            ...documentSnapshot.data(),
+            key: documentSnapshot.id,
+          });
+        });
+        setSubCategories(dataSub);
+      });
+
+    return () => subscriber();
+  }, []);
+
   // const renderItem = ({item}) => {
   //   return (
   //     <TouchableOpacity
@@ -50,53 +72,43 @@ const SubCategory = props => {
           }}>
           <Text style={styles.text_subCategory}>All</Text>
         </TouchableOpacity>
-        {data.map(item => {
+        {subCategories.map(item => {
           return (
             <View
               key={item.key}
               style={{
                 flex: 0.5,
+                flexDirection: 'row',
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
-              <TouchableOpacity
-                key={item.key}
-                style={[
-                  styles.btn_Product,
-                  {
-                    borderBottomWidth: page === item.subCategory ? 2 : 0,
-                  },
-                ]}
-                onPress={() => {
-                  setPage(item.subCategory);
-                }}>
-                <Text style={styles.text_subCategory}>{item.subCategory}</Text>
-              </TouchableOpacity>
+              {item.subCat.map(name => {
+                return (
+                  <TouchableOpacity
+                    key={name}
+                    // key={item}
+                    style={[
+                      styles.btn_Product,
+
+                      {
+                        // borderBottomWidth: page === item.subCategory ? 2 : 0,
+                        borderBottomWidth: page === name ? 2 : 0,
+                      },
+                    ]}
+                    onPress={() => {
+                      // setPage(item.subCategory);
+                      setPage(name);
+                    }}>
+                    {/* <Text style={styles.text_subCategory}>{item.subCategory}</Text> */}
+                    <Text style={styles.text_subCategory}>{name}</Text>
+                  </TouchableOpacity>
+                );
+              })}
             </View>
           );
         })}
       </View>
-      {/* <FlatList
-        data={data}
-        // horizontal
-        renderItem={renderItem}
-        showsVerticalScrollIndicator={false}
-        showsHorizontalScrollIndicator={false}
-      /> */}
     </ScrollView>
-    // <TouchableOpacity
-    //   disabled={page === title ? true : false}
-    //   style={[
-    //     styles.btn_Product,
-    //     {
-    //       borderBottomWidth: page === title ? 2 : 0,
-    //     },
-    //   ]}
-    //   onPress={() => {
-    //     setPage(title);
-    //   }}>
-    //   <Text style={styles.text_subCategory}>{title}</Text>
-    // </TouchableOpacity>
   );
 };
 

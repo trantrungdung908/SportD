@@ -196,7 +196,12 @@ const Products = () => {
     <View style={styles.container}>
       <FocusAwareStatusBar backgroundColor="#fff" barStyle="dark-content" />
       <View>
-        <SubCategory data={dataProducts} page={page} setPage={setPage} />
+        <SubCategory
+          data={dataProducts}
+          page={page}
+          setPage={setPage}
+          title={params.item?.catName}
+        />
       </View>
       {/* <ScrollView
         horizontal

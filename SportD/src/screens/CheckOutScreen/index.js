@@ -80,19 +80,28 @@ const CheckOutScreen = () => {
     <SafeAreaView style={styles.container}>
       <ScrollView
         showsVerticalScrollIndicator={false}
-        style={{marginHorizontal: 20, marginTop: 10}}>
-        <View style={styles.viewAddress}>
-          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <Text
-              style={{
-                color: colors.primaryColor,
-                fontFamily: 'Poppins-Regular',
-                fontWeight: '700',
-                fontSize: Platform.OS === 'android' ? 16 : 14,
-              }}>
-              Delivery Address
-            </Text>
-            <TouchableOpacity>
+        style={{
+          marginHorizontal: 20,
+          marginTop: 10,
+          flexGrow: 1,
+        }}>
+        <View
+          style={{
+            flex: 1,
+          }}>
+          <View style={styles.viewAddress}>
+            <View
+              style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+              <Text
+                style={{
+                  color: colors.primaryColor,
+                  fontFamily: 'Poppins-Regular',
+                  fontWeight: '700',
+                  fontSize: Platform.OS === 'android' ? 16 : 14,
+                }}>
+                Delivery Address
+              </Text>
+              {/* <TouchableOpacity>
               <Text
                 style={{
                   // fontSize: Platform.OS === 'android' ? 16 : 14,
@@ -103,45 +112,46 @@ const CheckOutScreen = () => {
                 }}>
                 Change
               </Text>
-            </TouchableOpacity>
-          </View>
-          <View
-            style={{
-              marginTop: 10,
-            }}>
-            <View style={styles.viewRow}>
-              <Ionicons name="person" style={styles.styleIcon} />
-              <Text style={styles.textInfo}>{user?.displayName}</Text>
+            </TouchableOpacity> */}
             </View>
-            <View style={styles.viewRow}>
-              <MaterialCommunityIcons
-                name="map-marker-radius-outline"
-                style={styles.styleIcon}
-              />
-              <Text style={styles.textInfo}>
-                {user?.city},{user?.country}
-              </Text>
-            </View>
-            <View style={styles.viewRow}>
-              <FontAwesome5 name="phone-alt" style={styles.styleIcon} />
-
-              <Text style={styles.textInfo}>{user?.phone}</Text>
-            </View>
-          </View>
-        </View>
-
-        <View style={styles.viewAddress}>
-          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <Text
+            <View
               style={{
-                color: colors.primaryColor,
-                fontFamily: 'Poppins-Regular',
-                fontWeight: '700',
-                fontSize: Platform.OS === 'android' ? 16 : 14,
+                marginTop: 10,
               }}>
-              Order Bills
-            </Text>
-            <TouchableOpacity>
+              <View style={styles.viewRow}>
+                <Ionicons name="person" style={styles.styleIcon} />
+                <Text style={styles.textInfo}>{user?.displayName}</Text>
+              </View>
+              <View style={styles.viewRow}>
+                <MaterialCommunityIcons
+                  name="map-marker-radius-outline"
+                  style={styles.styleIcon}
+                />
+                <Text style={styles.textInfo}>
+                  {user?.city},{user?.country}
+                </Text>
+              </View>
+              <View style={styles.viewRow}>
+                <FontAwesome5 name="phone-alt" style={styles.styleIcon} />
+
+                <Text style={styles.textInfo}>{user?.phone}</Text>
+              </View>
+            </View>
+          </View>
+
+          <View style={styles.viewAddress}>
+            <View
+              style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+              <Text
+                style={{
+                  color: colors.primaryColor,
+                  fontFamily: 'Poppins-Regular',
+                  fontWeight: '700',
+                  fontSize: Platform.OS === 'android' ? 16 : 14,
+                }}>
+                Order Bills
+              </Text>
+              {/* <TouchableOpacity>
               <Text
                 style={{
                   fontSize: 14,
@@ -151,75 +161,77 @@ const CheckOutScreen = () => {
                 }}>
                 Change
               </Text>
-            </TouchableOpacity>
-          </View>
-          <View
-            style={{
-              marginTop: 10,
-            }}>
-            <View style={styles.viewSpacing}>
-              <Text style={styles.textInfo}>Products</Text>
-
-              <Text style={styles.textInfo}>
-                {params?.cartData.reduce((p, c) => p + c.quantity, 0)} items
-              </Text>
+            </TouchableOpacity> */}
             </View>
-            <View style={styles.viewSpacing}>
-              <Text style={styles.textInfo}>Price</Text>
-
-              <Text style={styles.textInfo}>$ {params.total}</Text>
-            </View>
-            <View style={styles.viewSpacing}>
-              <Text style={styles.textInfo}>Shipping Fee </Text>
-
-              <Text style={styles.textInfo}>Free</Text>
-            </View>
-            <View style={styles.viewSpacing}>
-              <Text
-                style={[
-                  styles.textInfo,
-                  {fontWeight: '700', color: colors.primaryColor},
-                ]}>
-                Total Bill
-              </Text>
-
-              <Text
-                style={[
-                  styles.textInfo,
-                  {fontWeight: '700', color: colors.primaryColor},
-                ]}>
-                $ {params.total}
-              </Text>
-            </View>
-          </View>
-        </View>
-
-        <View style={styles.viewAddress}>
-          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <Text
+            <View
               style={{
-                color: colors.primaryColor,
-                fontFamily: 'Poppins-Regular',
-                fontWeight: '700',
-                fontSize: Platform.OS === 'android' ? 16 : 14,
+                marginTop: 10,
               }}>
-              Payment Method
-            </Text>
-          </View>
-          <View
-            style={{
-              marginTop: 10,
-            }}>
-            <View style={styles.viewRow}>
-              <Text style={styles.textInfo}>Cash on Delivery</Text>
+              <View style={styles.viewSpacing}>
+                <Text style={styles.textInfo}>Products</Text>
+
+                <Text style={styles.textInfo}>
+                  {params?.cartData.reduce((p, c) => p + c.quantity, 0)} items
+                </Text>
+              </View>
+              <View style={styles.viewSpacing}>
+                <Text style={styles.textInfo}>Price</Text>
+
+                <Text style={styles.textInfo}>$ {params.total}</Text>
+              </View>
+              <View style={styles.viewSpacing}>
+                <Text style={styles.textInfo}>Shipping Fee </Text>
+
+                <Text style={styles.textInfo}>Free</Text>
+              </View>
+              <View style={styles.viewSpacing}>
+                <Text
+                  style={[
+                    styles.textInfo,
+                    {fontWeight: '700', color: colors.primaryColor},
+                  ]}>
+                  Total Bill
+                </Text>
+
+                <Text
+                  style={[
+                    styles.textInfo,
+                    {fontWeight: '700', color: colors.primaryColor},
+                  ]}>
+                  $ {params.total}
+                </Text>
+              </View>
             </View>
-            <View style={styles.viewRow}>
-              <Text style={styles.textInfo}>...</Text>
+          </View>
+
+          <View style={styles.viewAddress}>
+            <View
+              style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+              <Text
+                style={{
+                  color: colors.primaryColor,
+                  fontFamily: 'Poppins-Regular',
+                  fontWeight: '700',
+                  fontSize: Platform.OS === 'android' ? 16 : 14,
+                }}>
+                Payment Method
+              </Text>
+            </View>
+            <View
+              style={{
+                marginTop: 10,
+              }}>
+              <View style={styles.viewRow}>
+                <Text style={styles.textInfo}>Cash on Delivery</Text>
+              </View>
+              <View style={styles.viewRow}>
+                <Text style={styles.textInfo}>...</Text>
+              </View>
             </View>
           </View>
         </View>
 
-        <View style={{}}>
+        <View style={{flex: 1}}>
           <TouchableOpacity
             style={styles.btnPay}
             onPress={() => {
@@ -280,6 +292,7 @@ const styles = StyleSheet.create({
   },
   btnPay: {
     // marginTop: 'auto',
+    flex: 1,
     padding: 20,
     marginHorizontal: 20,
     marginBottom: 5,
