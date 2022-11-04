@@ -55,7 +55,9 @@ const OrderSuccess = () => {
             style={styles.btn}
             onPress={() => {
               navigation.dispatch(StackActions.popToTop());
-              navigation.navigate('OrderHistoryScreen');
+              navigation.navigate('ProfileStackScreen', {
+                screen: 'OrderHistoryScreen',
+              });
             }}>
             <Text style={styles.text}>Track My Order</Text>
           </TouchableOpacity>

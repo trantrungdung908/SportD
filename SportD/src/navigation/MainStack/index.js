@@ -20,6 +20,7 @@ import ReviewsScreen from '../../screens/ReviewsScreen';
 import CheckOutScreen from '../../screens/CheckOutScreen';
 import OrderSuccess from '../../screens/OrderSuccess';
 import OrderHistoryScreen from '../../screens/OrderHistoryScreen';
+import SettingsScreen from '../../screens/SettingsScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import colors from '../../constants/colors';
@@ -219,7 +220,7 @@ const MainStack = () => {
           }}
         />
         <Tab.Screen
-          name="ProfileStack"
+          name="ProfileStackScreen"
           component={ProfileStackScreen}
           options={{
             headerShown: false,
@@ -322,6 +323,30 @@ const ProfileStackScreen = ({navigation}) => {
         }}
         name="OrderHistoryScreen"
         component={OrderHistoryScreen}
+      />
+      <ProfileStack.Screen
+        options={{
+          title: 'Settings',
+          headerTitleAlign: 'center',
+          headerLeft: () => {
+            return (
+              <View>
+                <FontAwesome.Button
+                  underlayColor="#fff"
+                  name="long-arrow-left"
+                  size={Platform.OS === 'ios' ? 25 : 22}
+                  color="#333"
+                  backgroundColor={'#fff'}
+                  onPress={() => {
+                    navigation.navigate('ProfileScreen');
+                  }}
+                />
+              </View>
+            );
+          },
+        }}
+        name="SettingsScreen"
+        component={SettingsScreen}
       />
     </ProfileStack.Navigator>
   );

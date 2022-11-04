@@ -15,7 +15,6 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import {useNavigation, useRoute} from '@react-navigation/native';
-import {auth, databaseStore, doc, updateDoc} from '../../../../firebase/config';
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -28,46 +27,65 @@ const EditProfileScreen = () => {
   // console.log('PARAMS', params.info);
   const [transferred, setTransferred] = useState(0);
   const [localState, setLocalState] = useState(params.info);
-  const [email, setEmail] = useState('');
-  const [userName, setUserName] = useState('');
-  const [phone, setPhone] = useState('');
-  const [city, setCity] = useState('');
-  const [country, setCountry] = useState('');
-  const [image, setImage] = useState(localState.userImg);
+  const [email, setEmail] = useState(null);
+  const [userName, setUserName] = useState(null);
+  const [phone, setPhone] = useState(null);
 
+  const [address, setAddress] = useState(null);
+  const [image, setImage] = useState(localState.userImg);
   //handle updateUser
   const updateUser = async () => {
     let imgUrl = await uploadImage();
 
-    if (imgUrl == null && localState.userImg) {
-      imgUrl = localState.userImg;
-    }
     let stringUser = await AsyncStorage.getItem('user');
     let myUserId = JSON.parse(stringUser).uid;
-    // const userDoc = doc(databaseStore, 'users', myUserId);
-    const newFields = {
-      email: email || localState.email,
-      displayName: userName || localState.displayName,
-      phone: phone || localState.phone,
-      city: city || localState.city,
-      country: country || localState.country,
-      userImg: imgUrl || localState.userImg,
-      userId: myUserId,
-    };
-    firestore()
-      .collection('users')
-      .doc(myUserId)
-      .update(newFields)
-      .then(() => {
-        Alert.alert(
-          'Profile Updated!',
-          'Your profile has been updated successfully',
-        );
-      })
-      .catch(error => {
-        console.log('ERROR', error);
-      });
-    // await updateDoc(userDoc, newFields);
+    if (imgUrl === false && localState.userImg) {
+      imgUrl = localState.userImg;
+
+      const newFields = {
+        email: email || localState.email,
+        displayName: userName || localState.displayName,
+        phone: phone || localState.phone,
+        address: address || localState.address,
+        userImg: localState.userImg,
+        userId: myUserId,
+      };
+      firestore()
+        .collection('users')
+        .doc(myUserId)
+        .update(newFields)
+        .then(() => {
+          Alert.alert(
+            'Profile Updated!',
+            'Your profile has been updated successfully',
+          );
+        })
+        .catch(error => {
+          console.log('ERROR', error);
+        });
+    } else {
+      const newFieldsWithUrl = {
+        email: email || localState.email,
+        displayName: userName || localState.displayName,
+        phone: phone || localState.phone,
+        address: address || localState.address,
+        userImg: imgUrl,
+        userId: myUserId,
+      };
+      firestore()
+        .collection('users')
+        .doc(myUserId)
+        .update(newFieldsWithUrl)
+        .then(() => {
+          Alert.alert(
+            'Profile Updated!',
+            'Your profile has been updated successfully1',
+          );
+        })
+        .catch(error => {
+          console.log('ERROR', error);
+        });
+    }
   };
   // handle takePhoto
   const takePhotoFromCamera = () => {
@@ -148,7 +166,7 @@ const EditProfileScreen = () => {
       return url;
     } catch (error) {
       const errorCode = error.code;
-      console.log('errorCode', errorCode);
+
       if (errorCode === 'storage/file-not-found') {
         return false;
       }
@@ -222,38 +240,75 @@ const EditProfileScreen = () => {
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
-              <ImageBackground
-                source={{
-                  uri: image
-                    ? image
-                    : localState
-                    ? localState.userImg ||
-                      'https://icon-library.com/images/default-user-icon/default-user-icon-13.jpg'
-                    : 'https://icon-library.com/images/default-user-icon/default-user-icon-13.jpg',
-                }}
-                style={{height: 100, width: 100}}
-                imageStyle={{borderRadius: 15}}>
-                <View
-                  style={{
-                    flex: 1,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}>
-                  <Icon
-                    name="camera"
-                    size={35}
-                    color="#fff"
+              {image !== null ? (
+                <ImageBackground
+                  source={{
+                    uri: image,
+                    // uri: image
+                    //   ? image
+                    //   : localState
+                    //   ? localState.userImg ||
+                    //     'https://icon-library.com/images/default-user-icon/default-user-icon-13.jpg'
+                    //   : 'https://icon-library.com/images/default-user-icon/default-user-icon-13.jpg',
+                  }}
+                  style={{height: 100, width: 100}}
+                  imageStyle={{borderRadius: 15}}>
+                  <View
                     style={{
-                      opacity: 0.7,
-                      alignItems: 'center',
+                      flex: 1,
                       justifyContent: 'center',
-                      borderWidth: 1,
-                      borderColor: '#fff',
-                      borderRadius: 10,
-                    }}
-                  />
-                </View>
-              </ImageBackground>
+                      alignItems: 'center',
+                    }}>
+                    <Icon
+                      name="camera"
+                      size={35}
+                      color="#fff"
+                      style={{
+                        opacity: 0.7,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        borderWidth: 1,
+                        borderColor: '#fff',
+                        borderRadius: 10,
+                      }}
+                    />
+                  </View>
+                </ImageBackground>
+              ) : (
+                <ImageBackground
+                  source={{
+                    uri: 'https://icon-library.com/images/default-user-icon/default-user-icon-13.jpg',
+                    // uri: image
+                    //   ? image
+                    //   : localState
+                    //   ? localState.userImg ||
+                    //     'https://icon-library.com/images/default-user-icon/default-user-icon-13.jpg'
+                    //   : 'https://icon-library.com/images/default-user-icon/default-user-icon-13.jpg',
+                  }}
+                  style={{height: 100, width: 100}}
+                  imageStyle={{borderRadius: 15}}>
+                  <View
+                    style={{
+                      flex: 1,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}>
+                    <Icon
+                      name="camera"
+                      size={35}
+                      color="#fff"
+                      style={{
+                        opacity: 0.7,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        borderWidth: 1,
+                        borderColor: '#fff',
+                        borderRadius: 10,
+                      }}
+                    />
+                  </View>
+                </ImageBackground>
+              )}
             </View>
           </TouchableOpacity>
         </View>
@@ -313,31 +368,14 @@ const EditProfileScreen = () => {
             {localState.email}
           </TextInput>
         </View>
-        <View style={styles.action}>
-          <FontAwesome name="globe" color={'#000'} size={20} />
-          <TextInput
-            onChangeText={text => {
-              setCountry(text);
-            }}
-            placeholder="Country"
-            placeholderTextColor="#666666"
-            autoCorrect={false}
-            style={[
-              styles.textInput,
-              {
-                color: '#000',
-              },
-            ]}>
-            {localState.country}
-          </TextInput>
-        </View>
+
         <View style={styles.action}>
           <Icon name="map-marker-outline" color={'#000'} size={20} />
           <TextInput
             onChangeText={text => {
-              setCity(text);
+              setAddress(text);
             }}
-            placeholder="City"
+            placeholder="Address"
             placeholderTextColor="#666666"
             autoCorrect={false}
             style={[
@@ -346,7 +384,7 @@ const EditProfileScreen = () => {
                 color: '#000',
               },
             ]}>
-            {localState.city}
+            {localState.address}
           </TextInput>
         </View>
         <TouchableOpacity

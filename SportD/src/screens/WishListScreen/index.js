@@ -210,7 +210,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   text_Favorite: {
-    fontSize: 16,
+    fontSize: Platform.OS === 'ios' ? 16 : 18,
     fontFamily: 'Poppins-Regular',
     textAlign: 'center',
     marginLeft: 100,

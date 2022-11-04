@@ -6,9 +6,11 @@ import {
   TouchableOpacity,
   ScrollView,
   Platform,
+  TextInput,
 } from 'react-native';
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {useSelector} from 'react-redux';
+import {RadioButton} from 'react-native-paper';
 import firestore from '@react-native-firebase/firestore';
 import colors from '../../constants/colors';
 import Loading from '../components/Loading';
@@ -22,9 +24,15 @@ const CheckOutScreen = () => {
   const navigation = useNavigation();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [name, setName] = useState('');
+  const [locate, setLocate] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState(null);
   const route = useRoute();
   const {params} = route;
-
+  const ref = useRef(null);
+  const ref1 = useRef(null);
+  const ref2 = useRef(null);
+  const [checked, setChecked] = useState('Cash on Delivery');
   const handlePay = async () => {
     setLoading(true);
     const docRef = firestore()
@@ -37,10 +45,10 @@ const CheckOutScreen = () => {
         orderData: params?.cartData,
         orderDeliveryStatus: 'Pending',
         orderDate: firestore.Timestamp.fromDate(new Date()),
-        orderAddress: `${user.city}, ${user?.country}`,
-        orderPhone: user.phone,
-        orderName: user.displayName,
-        orderPayment: 'Delivery',
+        orderAddress: locate || user?.address,
+        orderPhone: phoneNumber || user.phone,
+        orderName: name || user.displayName,
+        orderPayment: checked,
         orderCost: params?.total,
       })
       .then(async () => {
@@ -101,18 +109,6 @@ const CheckOutScreen = () => {
                 }}>
                 Delivery Address
               </Text>
-              {/* <TouchableOpacity>
-              <Text
-                style={{
-                  // fontSize: Platform.OS === 'android' ? 16 : 14,
-                  fontSize: 14,
-                  color: colors.primaryColor,
-                  fontFamily: 'Poppins-Regular',
-                  fontWeight: '400',
-                }}>
-                Change
-              </Text>
-            </TouchableOpacity> */}
             </View>
             <View
               style={{
@@ -120,21 +116,62 @@ const CheckOutScreen = () => {
               }}>
               <View style={styles.viewRow}>
                 <Ionicons name="person" style={styles.styleIcon} />
-                <Text style={styles.textInfo}>{user?.displayName}</Text>
+                <TextInput
+                  onChangeText={text => setName(text)}
+                  ref={ref}
+                  style={[styles.textInfo, {flex: 1}]}>
+                  {user?.displayName}
+                </TextInput>
+                <TouchableOpacity
+                  onPress={() => {
+                    ref.current.focus();
+                  }}
+                  style={{
+                    padding: 10,
+                  }}>
+                  <Ionicons name="pencil-outline" style={styles.styleIcon} />
+                </TouchableOpacity>
               </View>
               <View style={styles.viewRow}>
                 <MaterialCommunityIcons
                   name="map-marker-radius-outline"
                   style={styles.styleIcon}
                 />
-                <Text style={styles.textInfo}>
-                  {user?.city},{user?.country}
-                </Text>
+
+                <TextInput
+                  ref={ref1}
+                  onChangeText={text => setLocate(text)}
+                  style={[styles.textInfo, {flex: 1}]}>
+                  {user?.address}
+                </TextInput>
+                <TouchableOpacity
+                  onPress={() => {
+                    ref1.current.focus();
+                  }}
+                  style={{
+                    padding: 10,
+                  }}>
+                  <Ionicons name="pencil-outline" style={styles.styleIcon} />
+                </TouchableOpacity>
               </View>
               <View style={styles.viewRow}>
                 <FontAwesome5 name="phone-alt" style={styles.styleIcon} />
-
-                <Text style={styles.textInfo}>{user?.phone}</Text>
+                <TextInput
+                  onChangeText={num => setPhoneNumber(num)}
+                  keyboardType="number-pad"
+                  ref={ref2}
+                  style={[styles.textInfo, {flex: 1}]}>
+                  {user?.phone}
+                </TextInput>
+                <TouchableOpacity
+                  onPress={() => {
+                    ref2.current.focus();
+                  }}
+                  style={{
+                    padding: 10,
+                  }}>
+                  <Ionicons name="pencil-outline" style={styles.styleIcon} />
+                </TouchableOpacity>
               </View>
             </View>
           </View>
@@ -217,15 +254,38 @@ const CheckOutScreen = () => {
                 Payment Method
               </Text>
             </View>
-            <View
-              style={{
-                marginTop: 10,
-              }}>
-              <View style={styles.viewRow}>
-                <Text style={styles.textInfo}>Cash on Delivery</Text>
+            <View style={{marginTop: 10}}>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <RadioButton
+                  value="Cash on Delivery"
+                  status={
+                    checked === 'Cash on Delivery' ? 'checked' : 'unchecked'
+                  }
+                  onPress={() => setChecked('Cash on Delivery')}
+                />
+                <Text
+                  style={{
+                    fontFamily: 'Poppins-Regular',
+                    fontSize: 16,
+                    color: colors.primaryColor,
+                  }}>
+                  Cash on Delivery
+                </Text>
               </View>
-              <View style={styles.viewRow}>
-                <Text style={styles.textInfo}>...</Text>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <RadioButton
+                  value="Paypal"
+                  status={checked === 'Paypal' ? 'checked' : 'unchecked'}
+                  onPress={() => setChecked('Paypal')}
+                />
+                <Text
+                  style={{
+                    fontFamily: 'Poppins-Regular',
+                    fontSize: 16,
+                    color: colors.primaryColor,
+                  }}>
+                  Paypal
+                </Text>
               </View>
             </View>
           </View>
@@ -275,8 +335,12 @@ const styles = StyleSheet.create({
     padding: 10,
     marginBottom: 10,
   },
-  viewRow: {flexDirection: 'row', alignItems: 'center', marginBottom: 10},
+  viewRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   textInfo: {
+    // flex: 1,
     fontSize: 16,
     fontFamily: 'Poppins-Regular',
     color: '#000',

@@ -151,15 +151,13 @@ const ProfileScreen = () => {
             />
             <Text style={styles.textName}>{userInfor?.displayName}</Text>
           </View>
-          {userInfor?.city || userInfor?.country != '' ? (
+          {userInfor?.address != '' ? (
             <View style={[styles.viewRowIos, {marginTop: 20}]}>
               <MaterialCommunityIcons
                 name="map-marker-radius-outline"
                 style={styles.styleIcon}
               />
-              <Text style={styles.textInfo}>
-                {userInfor?.city}, <Text>{userInfor?.country}</Text>{' '}
-              </Text>
+              <Text style={styles.textInfo}>{userInfor?.address}</Text>
             </View>
           ) : (
             <View style={[styles.viewRowIos, {marginTop: 20}]}>
@@ -212,7 +210,11 @@ const ProfileScreen = () => {
               <FontAwesome5 name="box-open" style={styles.iconBtn} />
               <Text style={styles.textBtn}>Orders history</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.btnAll}>
+            <TouchableOpacity
+              style={styles.btnAll}
+              onPress={() => {
+                navigation.navigate('SettingsScreen');
+              }}>
               <Ionicons name="settings-outline" style={styles.iconBtn} />
               <Text style={styles.textBtn}>Settings</Text>
             </TouchableOpacity>
