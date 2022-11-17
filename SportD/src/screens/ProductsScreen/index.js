@@ -88,22 +88,6 @@ const Products = () => {
         <View>
           <Heart
             onPress={async () => {
-              // setIsSelected(!isSelected);
-              // let newProducts = dataProducts.map(eachProduct => {
-              //   if (item.name === eachProduct.name) {
-              //     return {
-              //       ...eachProduct,
-              //       isSelected:
-              //         eachProduct.isSelected === false ||
-              //         eachProduct.isSelected === undefined
-              //           ? true
-              //           : false,
-              //     };
-              //   }
-              //   return eachProduct;
-              // });
-              // setDataProducts(newProducts);
-
               if (item.favorite === undefined || item.favorite.length < 0) {
                 await firestore()
                   .collection(`products`)
@@ -112,16 +96,12 @@ const Products = () => {
                     {
                       favorite: firestore.FieldValue.arrayUnion(
                         ...[{isLike: true, userId: userId}],
-                        // ...[userId],
                       ),
                     },
                     {merge: true},
                   )
                   .then(() => {
                     alert('Product added to wishlist');
-                    // setIsLike(true);
-
-                    // setIsSelected(!isSelected);
                   })
                   .catch(err => {
                     console.log(err.code);
@@ -134,9 +114,6 @@ const Products = () => {
                     .doc(`${item.key}`)
                     .set(
                       {
-                        // favorite: firestore.FieldValue.arrayRemove(
-                        //   ...[{isLike: true, userId: userId}],
-                        // ),
                         favorite: firestore.FieldValue.arrayRemove(
                           ...[{isLike: true, userId: userId}],
                         ),
@@ -145,20 +122,17 @@ const Products = () => {
                     )
                     .then(() => {
                       alert('Product removed from wishlist');
-                      // setIsLike(false);
                     })
                     .catch(err => {
                       console.log(err.code);
                     });
                 } else {
-                  console.log('vc');
                   firestore()
                     .collection(`products`)
                     .doc(`${item.key}`)
                     .set(
                       {
-                        // favorite: [...userId],
-                        // favorite: firestore.FieldValue.arrayUnion(...[userId]),
+                        favorite: firestore.FieldValue.arrayUnion(...[userId]),
                         favorite: firestore.FieldValue.arrayUnion(
                           ...[{isLike: true, userId: userId}],
                         ),
@@ -167,8 +141,6 @@ const Products = () => {
                     )
                     .then(() => {
                       alert('Product added to wishlist');
-                      // setIsSelected(!isSelected);
-                      // setIsLike(true);
                     })
                     .catch(err => {
                       console.log(err.code);
@@ -203,25 +175,12 @@ const Products = () => {
           title={params.item?.catName}
         />
       </View>
-      {/* <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        style={{marginBottom: 5}}>
-        <SubCategory title="All " page={page} setPage={setPage} />
-        <SubCategory title="Football" page={page} setPage={setPage} />
-        <SubCategory title="Running" page={page} setPage={setPage} />
-        <SubCategory title="Basketball" page={page} setPage={setPage} />
-        <SubCategory title="Football" />
-      </ScrollView> */}
-      {/* <FlatList data={dataProducts} renderItem={renderItem} numColumns={2} /> */}
+
       {page === 'All' ? (
         <FlatList data={dataProducts} renderItem={renderItem} numColumns={2} />
       ) : (
         <SubScreen data={dataProducts} page={page} />
       )}
-      {/* {page === 'Football Shoes' ? (
-        <SubScreen data={dataProducts} page={page} />
-      ) : null} */}
     </View>
   ) : (
     <Loading />

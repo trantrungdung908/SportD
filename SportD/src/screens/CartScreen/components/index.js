@@ -1,4 +1,11 @@
-import {StyleSheet, Text, View, TouchableOpacity, Image} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Image,
+  Alert,
+} from 'react-native';
 import React, {useState, useEffect} from 'react';
 import colors from '../../../constants/colors';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -58,12 +65,26 @@ const CartItem = props => {
         // setDeleted(true);
       });
   };
-  //totalPrice
-  // useEffect(() => {
-  //   setTotalPrice(
-  //     cartData?.reduce((total, item) => total + item.price * item.quantity, 0),
-  //   );
-  // }, [cartData, quantity]);
+
+  const alertLogOut = () => {
+    Alert.alert(
+      'Do you want to delete?',
+      'You can cancel to keep this product.',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Delete',
+          onPress: () => {
+            handleDeleteCartItem();
+          },
+        },
+      ],
+    );
+  };
+
   useEffect(() => {
     // const array = [];
     // array.push(itemData);
@@ -111,7 +132,8 @@ const CartItem = props => {
             <TouchableOpacity
               style={styles.btn_Close}
               onPress={() => {
-                handleDeleteCartItem();
+                alertLogOut();
+                // handleDeleteCartItem();
               }}>
               <Ionicons name="trash" style={{fontSize: 22, color: '#000'}} />
             </TouchableOpacity>

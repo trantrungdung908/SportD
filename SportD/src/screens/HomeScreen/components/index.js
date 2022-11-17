@@ -29,7 +29,7 @@ const ListItem = props => {
         <View
           style={{
             width: 300,
-            height: 300,
+            height: 290,
             marginRight: 10,
             borderRadius: 10,
             borderWidth: 1,

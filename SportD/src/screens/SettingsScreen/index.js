@@ -4,12 +4,51 @@ import {
   View,
   ScrollView,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import {colors} from '../../constants';
+import firestore from '@react-native-firebase/firestore';
+import {auth} from '../../../firebase/config';
+import {logout} from '../LoginScreen/action';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-
+import {useNavigation} from '@react-navigation/native';
+import {useDispatch} from 'react-redux';
 const SettingsScreen = () => {
+  const navigation = useNavigation();
+  const dispatch = useDispatch();
+  const user = auth?.currentUser;
+  const alertDelete = () => {
+    Alert.alert(
+      'Are you sure?',
+      "You'll need to register again to using the application",
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Delete',
+          onPress: () => {
+            user
+              .delete()
+              .then(() => {
+                firestore().collection('users').doc(user?.uid).delete();
+                auth
+                  .signOut()
+                  .then(() => {
+                    dispatch(logout());
+                  })
+                  .catch(error => {
+                    console.log(error.code);
+                  });
+              })
+              .catch(error => console.log(error));
+          },
+        },
+      ],
+    );
+  };
   return (
     <View style={styles.container}>
       <ScrollView style={{flexGrow: 1}}>
@@ -128,6 +167,29 @@ const SettingsScreen = () => {
         <View style={{marginTop: 30, backgroundColor: '#fff'}}>
           <View>
             <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('ChangePass');
+              }}
+              style={{
+                borderBottomWidth: 1,
+                padding: 10,
+                height: 50,
+                justifyContent: 'center',
+                borderBottomColor: '#f2f2f2',
+              }}>
+              <Text style={styles.text}>Change Password </Text>
+            </TouchableOpacity>
+            <Ionicons
+              style={styles.iconRight}
+              name="chevron-forward"
+              size={20}
+            />
+          </View>
+          <View>
+            <TouchableOpacity
+              onPress={() => {
+                alertDelete();
+              }}
               style={{
                 borderBottomWidth: 1,
                 padding: 10,

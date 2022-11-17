@@ -7,7 +7,11 @@ import {
   ScrollView,
   Platform,
   TextInput,
+  Modal,
+  ActivityIndicator,
 } from 'react-native';
+import {WebView} from 'react-native-webview';
+import Feather from 'react-native-vector-icons/Feather';
 import React, {useState, useEffect, useRef} from 'react';
 import {useSelector} from 'react-redux';
 import {RadioButton} from 'react-native-paper';
@@ -32,7 +36,22 @@ const CheckOutScreen = () => {
   const ref = useRef(null);
   const ref1 = useRef(null);
   const ref2 = useRef(null);
+  const totalItems = params?.cartData.reduce((p, c) => p + c.quantity, 0);
   const [checked, setChecked] = useState('Cash on Delivery');
+  const [showGateway, setShowGateway] = useState(false);
+  const [prog, setProg] = useState(false);
+  const [progClr, setProgClr] = useState('#000');
+  function onMessage(e) {
+    let data = e.nativeEvent.data;
+    setShowGateway(false);
+    console.log(data);
+    let payment = JSON.parse(data);
+    if (payment.status === 'COMPLETED') {
+      alert('PAYMENT SUCCESSFULLY YOU CAN GO NEXT TO SUCCESS ORDER!');
+    } else {
+      alert('PAYMENT FAILED!!!PLEASE TRY AGAIN OR TRY OTHER PAYMENT METHOD');
+    }
+  }
   const handlePay = async () => {
     setLoading(true);
     const docRef = firestore()
@@ -83,37 +102,21 @@ const CheckOutScreen = () => {
       });
     return () => subscriber();
   }, []);
-
+  const handleWebView = () => {
+    setChecked('Paypal');
+    setShowGateway(true);
+  };
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
         showsVerticalScrollIndicator={false}
-        style={{
-          marginHorizontal: 20,
-          marginTop: 10,
-          flexGrow: 1,
-        }}>
-        <View
-          style={{
-            flex: 1,
-          }}>
+        style={styles.scrollViewWrap}>
+        <View>
           <View style={styles.viewAddress}>
-            <View
-              style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-              <Text
-                style={{
-                  color: colors.primaryColor,
-                  fontFamily: 'Poppins-Regular',
-                  fontWeight: '700',
-                  fontSize: Platform.OS === 'android' ? 16 : 14,
-                }}>
-                Delivery Address
-              </Text>
+            <View>
+              <Text style={styles.textTitle}>Delivery Address</Text>
             </View>
-            <View
-              style={{
-                marginTop: 10,
-              }}>
+            <View style={styles.styleMargin}>
               <View style={styles.viewRow}>
                 <Ionicons name="person" style={styles.styleIcon} />
                 <TextInput
@@ -126,9 +129,7 @@ const CheckOutScreen = () => {
                   onPress={() => {
                     ref.current.focus();
                   }}
-                  style={{
-                    padding: 10,
-                  }}>
+                  style={styles.paddingPencil}>
                   <Ionicons name="pencil-outline" style={styles.styleIcon} />
                 </TouchableOpacity>
               </View>
@@ -148,9 +149,7 @@ const CheckOutScreen = () => {
                   onPress={() => {
                     ref1.current.focus();
                   }}
-                  style={{
-                    padding: 10,
-                  }}>
+                  style={styles.paddingPencil}>
                   <Ionicons name="pencil-outline" style={styles.styleIcon} />
                 </TouchableOpacity>
               </View>
@@ -167,9 +166,7 @@ const CheckOutScreen = () => {
                   onPress={() => {
                     ref2.current.focus();
                   }}
-                  style={{
-                    padding: 10,
-                  }}>
+                  style={styles.paddingPencil}>
                   <Ionicons name="pencil-outline" style={styles.styleIcon} />
                 </TouchableOpacity>
               </View>
@@ -179,36 +176,14 @@ const CheckOutScreen = () => {
           <View style={styles.viewAddress}>
             <View
               style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-              <Text
-                style={{
-                  color: colors.primaryColor,
-                  fontFamily: 'Poppins-Regular',
-                  fontWeight: '700',
-                  fontSize: Platform.OS === 'android' ? 16 : 14,
-                }}>
-                Order Bills
-              </Text>
-              {/* <TouchableOpacity>
-              <Text
-                style={{
-                  fontSize: 14,
-                  color: colors.primaryColor,
-                  fontFamily: 'Poppins-Regular',
-                  fontWeight: '400',
-                }}>
-                Change
-              </Text>
-            </TouchableOpacity> */}
+              <Text style={styles.textTitle}>Order Bills</Text>
             </View>
-            <View
-              style={{
-                marginTop: 10,
-              }}>
+            <View style={styles.styleMargin}>
               <View style={styles.viewSpacing}>
                 <Text style={styles.textInfo}>Products</Text>
 
                 <Text style={styles.textInfo}>
-                  {params?.cartData.reduce((p, c) => p + c.quantity, 0)} items
+                  {totalItems} {totalItems === 1 ? 'item' : 'items'}
                 </Text>
               </View>
               <View style={styles.viewSpacing}>
@@ -242,20 +217,11 @@ const CheckOutScreen = () => {
           </View>
 
           <View style={styles.viewAddress}>
-            <View
-              style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-              <Text
-                style={{
-                  color: colors.primaryColor,
-                  fontFamily: 'Poppins-Regular',
-                  fontWeight: '700',
-                  fontSize: Platform.OS === 'android' ? 16 : 14,
-                }}>
-                Payment Method
-              </Text>
+            <View>
+              <Text style={styles.textTitle}>Payment Method</Text>
             </View>
-            <View style={{marginTop: 10}}>
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <View style={styles.styleMargin}>
+              <View style={styles.viewRow}>
                 <RadioButton
                   value="Cash on Delivery"
                   status={
@@ -263,33 +229,22 @@ const CheckOutScreen = () => {
                   }
                   onPress={() => setChecked('Cash on Delivery')}
                 />
-                <Text
-                  style={{
-                    fontFamily: 'Poppins-Regular',
-                    fontSize: 16,
-                    color: colors.primaryColor,
-                  }}>
-                  Cash on Delivery
-                </Text>
+                <Text style={styles.textMethod}>Cash on Delivery</Text>
               </View>
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <View style={styles.viewRow}>
                 <RadioButton
                   value="Paypal"
                   status={checked === 'Paypal' ? 'checked' : 'unchecked'}
-                  onPress={() => setChecked('Paypal')}
+                  onPress={() => handleWebView()}
                 />
-                <Text
-                  style={{
-                    fontFamily: 'Poppins-Regular',
-                    fontSize: 16,
-                    color: colors.primaryColor,
-                  }}>
-                  Paypal
-                </Text>
+                <Text style={styles.textMethod}>Paypal</Text>
               </View>
             </View>
           </View>
         </View>
+        {Platform.OS === 'ios' ? (
+          <View style={{flex: 1, backgroundColor: '#fff', height: 10}}></View>
+        ) : null}
 
         <View style={{flex: 1}}>
           <TouchableOpacity
@@ -302,21 +257,55 @@ const CheckOutScreen = () => {
         </View>
       </ScrollView>
       {loading ? (
-        <View
-          style={{
-            backgroundColor: 'black',
-            position: 'absolute',
-            opacity: 0.6,
-            justifyContent: 'center',
-            alignItems: 'center',
-            height: '100%',
-            width: '100%',
-          }}>
+        <View style={styles.loadingPay}>
           <Loading />
         </View>
       ) : (
         <></>
       )}
+      {showGateway ? (
+        <Modal
+          visible={showGateway}
+          onDismiss={() => setShowGateway(false)}
+          onRequestClose={() => setShowGateway(false)}
+          animationType={'fade'}
+          transparent>
+          <SafeAreaView style={styles.webViewCon}>
+            <View style={styles.wbHead}>
+              <TouchableOpacity
+                style={{padding: 13}}
+                onPress={() => setShowGateway(false)}>
+                <Feather name={'x'} size={24} />
+              </TouchableOpacity>
+              <Text style={styles.textGateway}>PayPal GateWay</Text>
+              <View style={{padding: 13, opacity: prog ? 1 : 0}}>
+                <ActivityIndicator size={24} color={'#00457C'} />
+              </View>
+            </View>
+            <WebView
+              source={{
+                uri: 'https://my-pay-cc87e.web.app/static/js/main.1f1b4f27.js.map',
+              }}
+              style={{flex: 1}}
+              onLoadStart={() => {
+                setProg(true);
+                setProgClr('#000');
+              }}
+              onLoadProgress={() => {
+                setProg(true);
+                setProgClr('#00457C');
+              }}
+              onLoadEnd={() => {
+                setProg(false);
+              }}
+              onLoad={() => {
+                setProg(false);
+              }}
+              onMessage={onMessage}
+            />
+          </SafeAreaView>
+        </Modal>
+      ) : null}
     </SafeAreaView>
   );
 };
@@ -327,6 +316,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+  },
+  scrollViewWrap: {
+    marginHorizontal: 20,
+    marginTop: 10,
   },
   viewAddress: {
     backgroundColor: colors.grayLightColor,
@@ -340,14 +333,25 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   textInfo: {
-    // flex: 1,
     fontSize: 16,
     fontFamily: 'Poppins-Regular',
     color: '#000',
   },
+  textMethod: {
+    fontFamily: 'Poppins-Regular',
+    fontSize: 16,
+    color: colors.primaryColor,
+  },
+  textTitle: {
+    color: colors.primaryColor,
+    fontFamily: 'Poppins-Regular',
+    fontWeight: '700',
+    fontSize: Platform.OS === 'android' ? 16 : 14,
+  },
   viewSpacing: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    marginVertical: Platform.OS === 'android' ? 5 : 10,
   },
   styleIcon: {
     color: colors.primaryColor,
@@ -355,7 +359,6 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   btnPay: {
-    // marginTop: 'auto',
     flex: 1,
     padding: 20,
     marginHorizontal: 20,
@@ -366,4 +369,41 @@ const styles = StyleSheet.create({
     borderRadius: 15,
   },
   textPay: {color: '#F6F6F9', fontFamily: 'Poppins-Regular', fontSize: 16},
+  styleMargin: {
+    marginTop: 10,
+  },
+  paddingPencil: {
+    padding: 10,
+  },
+  loadingPay: {
+    backgroundColor: '#000',
+    position: 'absolute',
+    opacity: 0.6,
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100%',
+    width: '100%',
+  },
+  webViewCon: {
+    position: 'absolute',
+    top: 0,
+    left: 10,
+    right: 10,
+    bottom: 0,
+  },
+  wbHead: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#f9f9f9',
+    zIndex: 25,
+    elevation: 2,
+  },
+  textGateway: {
+    flex: 1,
+    textAlign: 'center',
+    fontSize: 16,
+    fontWeight: 'bold',
+    fontFamily: 'Poppins-Regular',
+    color: '#00457C',
+  },
 });

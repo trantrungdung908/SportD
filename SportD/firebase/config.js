@@ -7,6 +7,9 @@ import {
   signInWithEmailAndPassword,
   sendPasswordResetEmail,
   updateProfile,
+  updatePassword,
+  EmailAuthProvider,
+  reauthenticateWithCredential,
 } from 'firebase/auth';
 import {
   getFirestore,
@@ -17,9 +20,6 @@ import {
   getDoc,
   setDoc,
   updateDoc,
-  connectFirestoreEmulator,
-  initializeFirestore,
-  enableIndexedDbPersistence,
 } from 'firebase/firestore';
 //ref = reference to the database
 import {getDatabase, ref, set, onValue, child, get} from 'firebase/database';
@@ -54,6 +54,9 @@ export {
   sendPasswordResetEmail,
   updateProfile,
   sendEmailVerification,
+  updatePassword,
+  EmailAuthProvider,
+  reauthenticateWithCredential,
   // real time
   ref,
   set,

@@ -59,109 +59,17 @@ const ReviewsScreen = () => {
     );
   };
   const handleSubmit = async () => {
-    // if (review !== null && review.length > 0) {
-    //   const exist = review.find(id => id.idProduct === itemData.key);
-    //   if (exist.idProduct === itemData.key && exist.idUser === userId) {
-    //     await firestore()
-    //       .collection(`review`)
-    //       .doc(`${exist.key}`)
-    //       .set(
-    //         {
-    //           message: firestore.FieldValue.arrayUnion(
-    //             ...[
-    //               {
-    //                 message: message,
-    //                 reviewAt: firestore.Timestamp.fromDate(new Date()),
-    //                 title,
-    //                 rating: defaultValue,
-    //                 name: userName,
-    //               },
-    //             ],
-    //           ),
-    //         },
-    //         {merge: true},
-    //       )
-    //       .then(() => {
-    //         setModalVisible(false);
-    //         setDefaultValue(5);
-    //       })
-    //       .catch(err => {
-    //         console.log(err.code);
-    //       });
-    //   } else {
-    //     firestore()
-    //       .collection('review')
-    //       .add({
-    //         message: [
-    //           {
-    //             message: message,
-    //             reviewAt: firestore.Timestamp.fromDate(new Date()),
-    //             title,
-    //             rating: defaultValue,
-    //             name: userName,
-    //           },
-    //         ],
-    //         idProduct: itemData.key,
-    //         idUser: userId,
-    //       })
-    //       .then(() => {
-    //         setTitle('');
-    //         setMessage('');
-    //         setModalVisible(false);
-    //         setDefaultValue(5);
-    //       })
-    //       .catch(err => {
-    //         console.log(err.code);
-    //       });
-    //   }
-    // }
-    // else {
-    //   if (title === '' || message === '') {
-    //     alert('Not null');
-    //   } else {
-    //     await firestore()
-    //       .collection('review')
-    //       .add({
-    //         message: [
-    //           {
-    //             message: message,
-    //             reviewAt: firestore.Timestamp.fromDate(new Date()),
-    //             rating: defaultValue,
-    //             title,
-    //             name: userName,
-    //           },
-    //         ],
-    //         // title,
-    //         // rating: defaultValue,
-    //         idProduct: itemData.key,
-    //         idUser: userId,
-    //       })
-    //       .then(() => {
-    //         setTitle('');
-    //         setMessage('');
-    //         setModalVisible(false);
-    //         setDefaultValue(5);
-    //       })
-    //       .catch(err => {
-    //         console.log(err.code);
-    //       });
-    //   }
-    // }
     if (title === '' || message === '') {
-      alert('Not null');
+      alert('You must fill this before submit');
     } else {
       await firestore()
         .collection('review')
         .add({
           message: message,
           reviewAt: firestore.Timestamp.fromDate(new Date()),
-
-          // reviewAt: new Date().getTime(),
           rating: defaultValue,
           title: title,
           name: userName,
-          // title,
-          // rating: defaultValue,
           idProduct: itemData.key,
           idUser: userId,
         })
@@ -196,38 +104,14 @@ const ReviewsScreen = () => {
   return (
     <ScrollView style={styles.container}>
       <SafeAreaView style={styles.container}>
-        <View
-          style={{
-            borderBottomWidth: 1,
-            borderColor: '#f2f2f2',
-          }}>
+        <View style={styles.viewWithBorder}>
           <Image
-            style={{
-              height: 180,
-              width: 180,
-              resizeMode: 'contain',
-              alignSelf: 'center',
-            }}
+            style={styles.imgProduct}
             source={{uri: itemData.imgProducts[0]}}
           />
-          <Text
-            style={{
-              textAlign: 'center',
-              marginTop: 10,
-              fontSize: 16,
-              fontFamily: 'Poppins-Regular',
-              color: colors.primaryColor,
-            }}>
-            {itemData.name}
-          </Text>
+          <Text style={styles.textProduct}>{itemData.name}</Text>
           {review?.length > 0 ? (
-            <Text
-              style={{
-                textAlign: 'center',
-                fontSize: 14,
-                fontFamily: 'Poppins-Regular',
-                color: colors.primaryColor,
-              }}>
+            <Text style={styles.textRating}>
               {Math.floor(averageRating) +
                 (Math.round(averageRating - Math.floor(averageRating))
                   ? 0.5
@@ -235,23 +119,9 @@ const ReviewsScreen = () => {
               ⭐️
             </Text>
           ) : (
-            <Text
-              style={{
-                textAlign: 'center',
-                fontSize: 14,
-                fontFamily: 'Poppins-Regular',
-                color: colors.primaryColor,
-              }}>
-              0 ⭐️
-            </Text>
+            <Text style={styles.textRating}>0 ⭐️</Text>
           )}
-          <Text
-            style={{
-              textAlign: 'center',
-              fontSize: 12,
-              fontFamily: 'Poppins-Regular',
-              color: colors.primaryColor,
-            }}>
+          <Text style={styles.textBasedOn}>
             Based on {review?.length} reviews
           </Text>
 
@@ -262,111 +132,26 @@ const ReviewsScreen = () => {
           </TouchableOpacity>
         </View>
         {review?.length > 0 ? (
-          <View style={{flex: 1, marginHorizontal: 20, marginTop: 10}}>
+          <View style={styles.viewReviews}>
             {review
               .sort((a, b) => b.reviewAt.seconds - a.reviewAt.seconds)
               .map(item => {
                 return (
-                  <View
-                    key={item.key}
-                    style={{
-                      backgroundColor: colors.grayLightColor,
-                      borderRadius: 5,
-                      height: 'auto',
-                      flexGrow: 1,
-                      padding: 10,
-                      marginBottom: 10,
-                    }}>
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        marginBottom: 5,
-                        alignItems: 'center',
-                      }}>
-                      <Text style={{color: colors.primaryColor}}>
-                        {item.rating}⭐️
-                      </Text>
-                      <Text>{item.name}</Text>
+                  <View key={item.key} style={styles.viewBorderReviews}>
+                    <View style={styles.viewWrapAllReviews}>
+                      <Text style={styles.textIconStar}>{item.rating}⭐️</Text>
+                      <Text style={styles.textUser}>{item.name}</Text>
                     </View>
-                    <Text
-                      style={{
-                        color: colors.primaryColor,
-                        fontWeight: 'bold',
-                        fontFamily: 'Poppins-Regular',
-                      }}>
-                      {item.title}
-                    </Text>
-                    <Text
-                      style={{
-                        color: colors.primaryColor,
-                      }}>
-                      {item.message}
-                    </Text>
+                    <Text style={styles.textTitleReviews}>{item.title}</Text>
+                    <Text style={styles.textMessReviews}>{item.message}</Text>
                   </View>
-                  // <View style={{flex: 1}} key={item.key}>
-                  //   {item.message.map(data => {
-                  //     return (
-                  //       <View
-                  //         key={data.reviewAt.seconds}
-                  //         style={{
-                  //           backgroundColor: colors.grayLightColor,
-                  //           borderRadius: 5,
-                  //           height: 'auto',
-                  //           flexGrow: 1,
-                  //           padding: 10,
-                  //           marginBottom: 10,
-                  //         }}>
-                  //         <View
-                  //           style={{
-                  //             flexDirection: 'row',
-                  //             justifyContent: 'space-between',
-                  //             marginBottom: 5,
-                  //             alignItems: 'center',
-                  //           }}>
-                  //           <Text style={{color: colors.primaryColor}}>
-                  //             {data.rating}⭐️
-                  //           </Text>
-                  //           <Text>{data.name}</Text>
-                  //         </View>
-                  //         <Text
-                  //           style={{
-                  //             color: colors.primaryColor,
-                  //             fontWeight: 'bold',
-                  //             fontFamily: 'Poppins-Regular',
-                  //           }}>
-                  //           {data.title}
-                  //         </Text>
-                  //         <Text
-                  //           style={{
-                  //             color: colors.primaryColor,
-                  //           }}>
-                  //           {data.message}
-                  //         </Text>
-                  //       </View>
-                  //     );
-                  //   })}
-                  // </View>
                 );
               })}
           </View>
         ) : (
-          <View
-            style={{
-              // flex: 1,
-              alignItems: 'center',
-              justifyContent: 'center',
-              height: windowHeight - 450,
-            }}>
+          <View style={styles.viewNoReviews}>
             <FontAwesome name="comments" style={{fontSize: 26}} />
-            <Text
-              style={{
-                fontWeight: 'bold',
-                fontFamily: 'Poppins-Regular',
-                fontSize: 16,
-              }}>
-              No reviews yet
-            </Text>
+            <Text style={styles.textNoReviews}>No reviews yet</Text>
           </View>
         )}
         {/* Modal */}
@@ -377,12 +162,7 @@ const ReviewsScreen = () => {
             visible={modalVisible}>
             <SafeAreaView style={styles.centeredView}>
               <View style={styles.modalView}>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                  }}>
+                <View style={styles.viewRowSpace}>
                   <TouchableOpacity
                     style={styles.buttonClose}
                     onPress={() => setModalVisible(!modalVisible)}>
@@ -392,38 +172,12 @@ const ReviewsScreen = () => {
                       style={{fontSize: 26}}
                     />
                   </TouchableOpacity>
-                  <Text
-                    style={{
-                      fontSize: 16,
-                      fontFamily: 'Poppins-Regular',
-                      color: colors.primaryColor,
-                      marginRight: 30,
-                      justifyContent: 'center',
-                    }}>
-                    Write a Review
-                  </Text>
+                  <Text style={styles.textWriteReivew}>Write a Review</Text>
                   <View></View>
                 </View>
-                <View
-                  style={{
-                    flex: 1,
-                    marginHorizontal: 20,
-                  }}>
-                  <View
-                    style={{
-                      height: 120,
-                      // borderWidth: 1,
-                      // borderColor: '#ccc',
-                      // borderRadius: 5,
-                    }}>
-                    <Text
-                      style={{
-                        textAlign: 'center',
-                        fontSize: 16,
-                        fontFamily: 'Poppins-Regular',
-                        fontWeight: '400',
-                        color: colors.primaryColor,
-                      }}>
+                <View style={styles.viewMargin}>
+                  <View style={styles.viewWrapHeader}>
+                    <Text style={styles.textQuestion}>
                       How would you rate this item?
                     </Text>
                     <CustomRating />
@@ -473,9 +227,14 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
+  viewWithBorder: {
+    borderBottomWidth: 1,
+    borderColor: '#f2f2f2',
+  },
   centeredView: {
     flex: 1,
     backgroundColor: '#fff',
+    justifyContent: 'center',
   },
   modalView: {
     flex: 1,
@@ -530,5 +289,99 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Regular',
     fontSize: 16,
     textAlign: 'center',
+  },
+  imgProduct: {
+    height: 180,
+    width: 180,
+    resizeMode: 'contain',
+    alignSelf: 'center',
+  },
+  textProduct: {
+    textAlign: 'center',
+    marginTop: 10,
+    fontSize: 16,
+    fontFamily: 'Poppins-Regular',
+    color: colors.primaryColor,
+  },
+  textRating: {
+    textAlign: 'center',
+    fontSize: 16,
+    fontFamily: 'Poppins-Regular',
+    color: colors.primaryColor,
+  },
+  textBasedOn: {
+    textAlign: 'center',
+    fontSize: 14,
+    fontFamily: 'Poppins-Regular',
+    color: colors.primaryColor,
+    marginVertical: 5,
+  },
+  viewReviews: {flex: 1, marginHorizontal: 20, marginTop: 10},
+  viewBorderReviews: {
+    backgroundColor: colors.grayLightColor,
+    borderRadius: 5,
+    height: 'auto',
+    flexGrow: 1,
+    padding: 10,
+    marginBottom: 10,
+  },
+  viewWrapAllReviews: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 5,
+    alignItems: 'center',
+  },
+  textIconStar: {color: colors.primaryColor, fontSize: 16},
+  textUser: {
+    fontFamily: 'Poppins-Regular',
+    fontSize: 14,
+    color: colors.primaryColor,
+  },
+  textTitleReviews: {
+    color: colors.primaryColor,
+    fontWeight: 'bold',
+    fontFamily: 'Poppins-Regular',
+    fontSize: 16,
+  },
+  textMessReviews: {
+    color: colors.primaryColor,
+    fontFamily: 'Poppins-Regular',
+    fontSize: 14,
+  },
+  viewNoReviews: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: windowHeight - 450,
+  },
+  textNoReviews: {
+    fontWeight: 'bold',
+    fontFamily: 'Poppins-Regular',
+    fontSize: 16,
+  },
+  viewRowSpace: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  textWriteReivew: {
+    fontSize: 16,
+    fontFamily: 'Poppins-Regular',
+    color: colors.primaryColor,
+    marginRight: 30,
+    justifyContent: 'center',
+  },
+  viewMargin: {
+    flex: 1,
+    marginHorizontal: 20,
+  },
+  viewWrapHeader: {
+    height: 120,
+  },
+  textQuestion: {
+    textAlign: 'center',
+    fontSize: 16,
+    fontFamily: 'Poppins-Regular',
+    fontWeight: '400',
+    color: colors.primaryColor,
   },
 });

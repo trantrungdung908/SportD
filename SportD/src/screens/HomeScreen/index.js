@@ -24,29 +24,24 @@ import ListItem from './components';
 
 const windowWeight = Dimensions.get('window').width;
 const HomeScreen = props => {
-  const dataIntro = [
-    {
-      id: 1,
-      name: "Let's see socks",
-      img: 'https://images.unsplash.com/photo-1616531758364-731625b1f273?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NTd8fHNvY2t8ZW58MHx8MHx8&auto=format&fit=crop&w=900&q=60',
-    },
-    {
-      id: 2,
-      name: 'XYZ',
-      img: 'https://images.unsplash.com/photo-1616531758364-731625b1f273?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NTd8fHNvY2t8ZW58MHx8MHx8&auto=format&fit=crop&w=900&q=60',
-    },
-  ];
-
-  const userId = useSelector(state => state.login.currentUser.uid);
   const navigation = useNavigation();
   const route = useRoute();
   const {params} = route;
   const [categories, setCategories] = useState([]);
   const [dataProducts, setDataProducts] = useState([]);
-  const [shoesData, setShoesData] = useState([]);
-  const [shirtData, setShirtData] = useState([]);
-  // console.log('SHOES', shoesData);
+  const [dataNews, setDataNews] = useState([]);
+  // const [shoesData, setShoesData] = useState([]);
+  // const [shirtData, setShirtData] = useState([]);
   const [loading, setLoading] = useState(true);
+  function limit(c) {
+    return this.filter((x, i) => {
+      if (i <= c - 1) {
+        return true;
+      }
+    });
+  }
+
+  Array.prototype.limit = limit;
   //
   // useEffect(() => {
   //   firestore()
@@ -77,12 +72,38 @@ const HomeScreen = props => {
   //   // return () => subscriber();
   // }, []);
 
+  // useEffect(() => {
+  //   let isMounted = true;
+  //   firestore()
+  //     .collection('categories')
+  //     .get()
+  //     .then(querySnapshot => {
+  //       const categories = [];
+  //       querySnapshot.forEach(documentSnapshot => {
+  //         categories.push({
+  //           ...documentSnapshot.data(),
+  //           key: documentSnapshot.id,
+  //         });
+  //       });
+  //       if (isMounted) {
+  //         setCategories(
+  //           categories.sort((a, b) => a.catName.localeCompare(b.catName)),
+  //         );
+  //         setLoading(false);
+  //       }
+  //     })
+  //     .catch(error => {
+  //       console.log(error.code);
+  //     });
+  //   return () => {
+  //     isMounted = false;
+  //   };
+  // }, []);
+
   useEffect(() => {
-    let isMounted = true;
-    firestore()
+    const subscriber = firestore()
       .collection('categories')
-      .get()
-      .then(querySnapshot => {
+      .onSnapshot(querySnapshot => {
         const categories = [];
         querySnapshot.forEach(documentSnapshot => {
           categories.push({
@@ -90,43 +111,17 @@ const HomeScreen = props => {
             key: documentSnapshot.id,
           });
         });
-        if (isMounted) {
-          setCategories(categories);
-          setLoading(false);
-        }
-      })
-      .catch(error => {
-        console.log('abc');
-        console.log(error.code);
+        setCategories(
+          categories.sort((a, b) => a.catName.localeCompare(b.catName)),
+        );
+        setLoading(false);
       });
-    return () => {
-      isMounted = false;
-    };
+    return () => subscriber();
   }, []);
 
   useEffect(() => {
-    // firestore()
-    //   .collection('products')
-    //   // .where('category', '==')
-    //   .get()
-    //   .then(querySnapshot => {
-    //     const dataCategory = [];
-    //     querySnapshot.forEach(documentSnapshot => {
-    //       dataCategory.push({
-    //         ...documentSnapshot.data(),
-    //         key: documentSnapshot.id,
-    //       });
-    //     });
-    //     setDataProducts(dataCategory);
-    //     setLoading(false);
-    //   })
-    //   .catch(error => {
-    //     console.log('error.code', error.code);
-    //   });
-    // }, []);
     const subscriber = firestore()
       .collection('products')
-      .limit(20)
       .onSnapshot(querySnapshot => {
         const dataCategory = [];
         querySnapshot.forEach(documentSnapshot => {
@@ -140,10 +135,27 @@ const HomeScreen = props => {
       });
     return () => subscriber();
   }, []);
+
   useEffect(() => {
-    setShoesData(dataProducts.filter(item => item.category === 'Shoes'));
-    setShirtData(dataProducts.filter(item => item.category === 'T-Shirts'));
-  }, [dataProducts]);
+    const subscriber = firestore()
+      .collection('news')
+      .onSnapshot(querySnapshot => {
+        const newsArray = [];
+        querySnapshot.forEach(documentSnapshot => {
+          newsArray.push({
+            ...documentSnapshot.data(),
+            key: documentSnapshot.id,
+          });
+        });
+        setDataNews(newsArray);
+        setLoading(false);
+      });
+    return () => subscriber();
+  }, []);
+  // useEffect(() => {
+  //   setShoesData(dataProducts.filter(item => item.category === 'Shoes'));
+  //   setShirtData(dataProducts.filter(item => item.category === 'T-Shirts'));
+  // }, [dataProducts]);
 
   // Flatlist horizontal
   const renderItem = ({item}) => {
@@ -238,31 +250,47 @@ const HomeScreen = props => {
             </View>
           </View>
 
-          {/* Intro */}
-          {/* <View style={styles.view_Intro}>
-            {dataIntro.map(item => {
+          <ListItem
+            data={dataProducts.sort(() => Math.random() - 0.5).limit(10)}
+            title={'Featured Product'}
+          />
+          {/* <ListItem data={shirtData} title={'Featured Product'} /> */}
+          <View style={styles.view_Intro}>
+            <Text
+              style={{
+                marginLeft: 10,
+                fontFamily: 'Poppins-Regular',
+                fontSize: 20,
+                marginBottom: 10,
+                color: colors.primaryColor,
+              }}>
+              What's News
+            </Text>
+            {dataNews.map(item => {
               return (
                 <TouchableOpacity
                   onPress={() => {
-                    // navigation.navigate('Products');
+                    navigation.navigate('NewsScreen', {
+                      item: item,
+                    });
                   }}
-                  key={item.id}
+                  key={item.newsId}
                   style={{
                     marginHorizontal: 10,
                   }}>
                   <Image
                     style={styles.img_Intro}
                     source={{
-                      uri: item.img,
+                      uri: item.imageNews,
                     }}
                   />
-                  <Text style={styles.text_Intro}>{item.name}</Text>
+                  <Text style={styles.text_Intro}>{item.title}</Text>
+
+                  <Text style={styles.text_Read}>Read more</Text>
                 </TouchableOpacity>
               );
             })}
-          </View> */}
-          <ListItem data={shoesData} title={'Featured Product'} />
-          <ListItem data={shirtData} title={'Featured Product'} />
+          </View>
         </ScrollView>
       ) : (
         <Loading />
@@ -320,30 +348,46 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginRight: 15,
   },
+
   view_Intro: {
     flex: 1,
     flexDirection: 'row',
     flexWrap: 'wrap',
-    // alignItems: 'flex-start',
-    // marginTop: 10,
     marginHorizontal: 10,
     marginTop: 10,
   },
-  // img_Intro: {
-  //   borderRadius: 8,
-  //   overflow: 'hidden',
-  //   width: '100%',
-  //   height: 350,
-  //   marginBottom: 10,
-  // },
-  // text_Intro: {
-  //   position: 'absolute',
-  //   bottom: 20,
-  //   left: 10,
-  //   fontFamily: 'Poppins-Bold',
-  //   fontSize: 20,
-  //   color: '#fff',
-  // },
+  img_Intro: {
+    borderRadius: 8,
+    overflow: 'hidden',
+    width: windowWeight - 40,
+    height: 450,
+    marginBottom: 10,
+  },
+  text_Intro: {
+    position: 'absolute',
+    bottom: 80,
+    left: 10,
+    fontFamily: 'Poppins-Bold',
+    fontSize: 26,
+    color: '#fff',
+  },
+  text_Read: {
+    position: 'absolute',
+    bottom: 30,
+    left: 10,
+    fontFamily: 'Poppins-Bold',
+    fontSize: 16,
+    backgroundColor: '#fff',
+    // padding: 10,
+    borderRadius: 15,
+    // padding: 5,
+    paddingTop: 10,
+    paddingBottom: 10,
+    paddingLeft: 15,
+    paddingRight: 15,
+    overflow: 'hidden',
+    color: '#000',
+  },
   img_Equip: {
     width: 55,
     height: 55,

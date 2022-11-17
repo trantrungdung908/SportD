@@ -8,4 +8,5 @@ export default {
   successOrder: require('../assets/images/successOrder.png'),
   noHistoryOrder: require('../assets/images/noHistory.png'),
   searchNotFound: require('../assets/images/searchNotFound.png'),
+  resetPass: require('../assets/images/reset_password.png'),
 };

@@ -21,6 +21,8 @@ import CheckOutScreen from '../../screens/CheckOutScreen';
 import OrderSuccess from '../../screens/OrderSuccess';
 import OrderHistoryScreen from '../../screens/OrderHistoryScreen';
 import SettingsScreen from '../../screens/SettingsScreen';
+import ChangePass from '../../screens/SettingsScreen/components/ChangePass';
+import NewsScreen from '../../screens/NewsScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import colors from '../../constants/colors';
@@ -348,6 +350,30 @@ const ProfileStackScreen = ({navigation}) => {
         name="SettingsScreen"
         component={SettingsScreen}
       />
+      <ProfileStack.Screen
+        options={{
+          title: 'Change Password',
+          headerTitleAlign: 'center',
+          headerLeft: () => {
+            return (
+              <View>
+                <FontAwesome.Button
+                  underlayColor="#fff"
+                  name="long-arrow-left"
+                  size={Platform.OS === 'ios' ? 25 : 22}
+                  color="#333"
+                  backgroundColor={'#fff'}
+                  onPress={() => {
+                    navigation.navigate('SettingsScreen');
+                  }}
+                />
+              </View>
+            );
+          },
+        }}
+        name="ChangePass"
+        component={ChangePass}
+      />
     </ProfileStack.Navigator>
   );
 };
@@ -372,6 +398,13 @@ const HomeStackScreen = ({navigation}) => {
         component={HomeScreen}
       />
 
+      <HomeStack.Screen
+        options={{
+          headerTitleStyle: {color: '#FFF'},
+        }}
+        name="NewsScreen"
+        component={NewsScreen}
+      />
       <HomeStack.Screen
         name="Products"
         component={Products}

@@ -31,18 +31,12 @@ import {
 } from '../../ultilies/Validate';
 import {
   auth,
-  firebaseData,
   createUserWithEmailAndPassword,
   updateProfile,
   sendEmailVerification,
   ref,
   set,
   // firestore
-  databaseStore,
-  collection,
-  addDoc,
-  setDoc,
-  doc,
 } from '../../../firebase/config';
 import firestore from '@react-native-firebase/firestore';
 LogBox.ignoreLogs([
@@ -88,12 +82,13 @@ const SignUp = props => {
                 .doc(user.uid)
                 .set({
                   email: user.email,
-                  emailVerified: user.emailVerified,
+                  isAdmin: false,
                   accessToken: user.accessToken,
                   displayName: user.displayName,
                   phone: '',
                   address: '',
-                  userImg: null,
+                  userImg:
+                    'https://icon-library.com/images/default-user-icon/default-user-icon-13.jpg',
                   userId: user.uid,
                 })
 
@@ -390,6 +385,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     overflow: 'hidden',
+    backgroundColor: '#FFF',
   },
   image: {
     flex: 1,
@@ -404,6 +400,7 @@ const styles = StyleSheet.create({
   },
   footer: {
     flex: 2,
+
     paddingHorizontal: 20,
     paddingVertical: 30,
     backgroundColor: '#fff',

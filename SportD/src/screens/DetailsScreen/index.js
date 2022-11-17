@@ -9,15 +9,14 @@ import {
   TouchableOpacity,
   Platform,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import colors from '../../constants/colors';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import FocusAwareStatusBar from '../components/FocusAwareStatusBar';
 import firestore from '@react-native-firebase/firestore';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useSelector} from 'react-redux';
-import {v4 as uuidv4} from 'uuid';
 
 const windowWeight = Dimensions.get('window').width;
 const DetailsScreen = props => {
@@ -26,13 +25,13 @@ const DetailsScreen = props => {
   const route = useRoute();
   const {params} = route;
   const detailsItem = params.item;
-
   const [detailsData, setDetailsData] = useState(detailsItem);
   const [itemInCart, setItemInCart] = useState([]);
   // console.log('itemInCart', itemInCart);
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const [isSelected, setIsSelected] = useState();
   const [selectSize, setSelectSize] = useState();
+  const [loading, setLoading] = useState(false);
   const [review, setReview] = useState([]);
   const averageRating =
     review?.reduce((total, next) => total + next.rating, 0) / review?.length;
@@ -45,19 +44,8 @@ const DetailsScreen = props => {
   //3 DOT
   const Dot = () => {
     return (
-      <View
-        style={{
-          position: 'absolute',
-          bottom: 0,
-          transform: [{translateY: -20}],
-          width: '100%',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
-        <View
-          style={{
-            flexDirection: 'row',
-          }}>
+      <View style={styles.view3Dot}>
+        <View style={styles.flexDot}>
           {detailsData.imgProducts.map((_, index) => (
             <View
               key={index}
@@ -75,6 +63,7 @@ const DetailsScreen = props => {
   };
   //handle addtoCart
   const handleAddToCart = async () => {
+    setLoading(true);
     const exist = itemInCart.find(a => a.size === selectSize);
     if (!exist) {
       if (selectSize === undefined) {
@@ -93,17 +82,20 @@ const DetailsScreen = props => {
             addTime: firestore.Timestamp.fromDate(new Date()),
           })
           .then(() => {
-            alert('Product added to cart');
             setSelectSize();
             setIsSelected();
+            setTimeout(() => {
+              setLoading(false);
+              alert('Product added to cart');
+            }, 1000);
           })
           .catch(err => {
-            console.log('NULL');
             console.log(err.code);
           });
       }
     } else {
       if (exist.name !== detailsData.name) {
+        setLoading(true);
         firestore()
           .collection(`cart-${userId}`)
           .add({
@@ -116,16 +108,14 @@ const DetailsScreen = props => {
             addTime: firestore.Timestamp.fromDate(new Date()),
           })
           .then(() => {
-            // setTimeout(() => {
-            //   Alert.alert('Success', 'Product added to cart');
-            // }, 100);
-            alert('Product added to cart');
             setSelectSize();
             setIsSelected();
+            setTimeout(() => {
+              setLoading(false);
+              alert('Product added to cart');
+            }, 1500);
           })
           .catch(err => {
-            console.log('<<<<<NULL');
-
             console.log(err.code);
           });
       } else {
@@ -136,92 +126,14 @@ const DetailsScreen = props => {
             quantity: exist.quantity + 1,
           })
           .then(() => {
+            setLoading(false);
             setSelectSize();
             setIsSelected();
           });
       }
     }
   };
-  // const renderReview = ({item}) => {
-  //   return (
-  //     <View
-  //       style={{
-  //         marginTop: 5,
-  //         borderColor: '#ccc',
-  //         borderWidth: 1,
-  //         borderRadius: 5,
-  //         height: 100,
-  //         width: windowWeight - 50,
-  //         padding: 10,
-  //         marginRight: 10,
-  //       }}>
-  //       <View
-  //         style={{
-  //           flexDirection: 'row',
-  //           justifyContent: 'space-between',
-  //           marginBottom: 5,
-  //           alignItems: 'center',
-  //         }}>
-  //         <Text style={{color: colors.primaryColor}}>{item.rating}⭐️</Text>
-  //         <Text>{item?.name}</Text>
-  //       </View>
-  //       <Text
-  //         style={{
-  //           color: colors.primaryColor,
-  //           fontWeight: 'bold',
-  //           fontFamily: 'Poppins-Regular',
-  //         }}>
-  //         {item?.title}
-  //       </Text>
-  //       <Text
-  //         style={{
-  //           color: colors.primaryColor,
-  //         }}>
-  //         {item?.message}
-  //       </Text>
 
-  //       {/* {item.message.map(data => {
-  //         return (
-  //           <View
-  //             key={data.reviewAt.seconds}
-  //             style={{
-  //               borderRadius: 5,
-  //               marginBottom: 10,
-  //               width: windowWeight - 150,
-  //             }}>
-  //             <View
-  //               style={{
-  //                 flexDirection: 'row',
-  //                 justifyContent: 'space-between',
-  //                 marginBottom: 5,
-  //                 alignItems: 'center',
-  //               }}>
-  //               <Text style={{color: colors.primaryColor}}>
-  //                 {data.rating}⭐️
-  //               </Text>
-  //               <Text>{data.name}</Text>
-  //             </View>
-  //             <Text
-  //               style={{
-  //                 color: colors.primaryColor,
-  //                 fontWeight: 'bold',
-  //                 fontFamily: 'Poppins-Regular',
-  //               }}>
-  //               {data.title}
-  //             </Text>
-  //             <Text
-  //               numberOfLines={2}
-  //               style={{
-  //                 color: colors.primaryColor,
-  //               }}>
-  //               {data.message}
-  //             </Text>
-  //           </View>
-  //         );
-  //       })} */}
-  //     </View>
-  //   );
-  // };
   useEffect(() => {
     const subscriber = firestore()
       .collection(`cart-${userId}`)
@@ -259,7 +171,7 @@ const DetailsScreen = props => {
     <ScrollView style={styles.container}>
       <FocusAwareStatusBar backgroundColor="#fff" barStyle="dark-content" />
       {/* Carousel */}
-      <View style={{flex: 1}}>
+      <View style={styles.container}>
         <ScrollView
           onMomentumScrollEnd={updateCurrentSlideIndex}
           pagingEnabled
@@ -276,22 +188,10 @@ const DetailsScreen = props => {
       </View>
       {/* details product */}
       <View style={styles.view_Details}>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}>
+        <View style={styles.flexSpace}>
           <Text style={styles.textCategory}>{detailsData.subCategory}</Text>
-          {/* <Text style={styles.textCategory}>5 🌟</Text> */}
           {review?.length > 0 ? (
-            <Text
-              style={{
-                textAlign: 'center',
-                fontSize: 14,
-                fontFamily: 'Poppins-Regular',
-                color: colors.primaryColor,
-              }}>
+            <Text style={styles.textRating}>
               {Math.floor(averageRating) +
                 (Math.round(averageRating - Math.floor(averageRating))
                   ? 0.5
@@ -299,15 +199,7 @@ const DetailsScreen = props => {
               ⭐️ ({review.length})
             </Text>
           ) : (
-            <Text
-              style={{
-                textAlign: 'center',
-                fontSize: 14,
-                fontFamily: 'Poppins-Regular',
-                color: colors.primaryColor,
-              }}>
-              0 ⭐️ ({review.length})
-            </Text>
+            <Text style={styles.textRating}>0 ⭐️ ({review.length})</Text>
           )}
         </View>
 
@@ -337,12 +229,7 @@ const DetailsScreen = props => {
           })}
         </View>
         {/* Reviews */}
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}>
+        <View style={styles.flexSpace}>
           <Text style={styles.textReviews}>Reviews ({review?.length})</Text>
           <TouchableOpacity
             onPress={() => {
@@ -353,14 +240,6 @@ const DetailsScreen = props => {
             <Text style={styles.textReviews}>View all</Text>
           </TouchableOpacity>
         </View>
-        {/* {review?.length > 0 ? (
-          <FlatList
-            horizontal
-            data={review}
-            showsHorizontalScrollIndicator={false}
-            renderItem={renderReview}
-          />
-        ) : null} */}
       </View>
       {/* Add to cart */}
       <View style={styles.viewBtn}>
@@ -369,7 +248,11 @@ const DetailsScreen = props => {
           onPress={() => {
             handleAddToCart();
           }}>
-          <Text style={styles.textAdd}>Add To Cart</Text>
+          {loading === true ? (
+            <ActivityIndicator size="small" color="#0000ff" />
+          ) : (
+            <Text style={styles.textAdd}>Add To Cart</Text>
+          )}
         </TouchableOpacity>
       </View>
     </ScrollView>
@@ -387,6 +270,17 @@ const styles = StyleSheet.create({
     height: 500,
     width: windowWeight,
   },
+  view3Dot: {
+    position: 'absolute',
+    bottom: 0,
+    transform: [{translateY: -20}],
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  flexDot: {
+    flexDirection: 'row',
+  },
   dot: {
     marginHorizontal: 4,
     width: 26,
@@ -399,9 +293,20 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 20,
   },
+  flexSpace: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
   textCategory: {
     fontSize: 16,
     fontFamily: 'Poppins-Light',
+    color: colors.primaryColor,
+  },
+  textRating: {
+    textAlign: 'center',
+    fontSize: 14,
+    fontFamily: 'Poppins-Regular',
     color: colors.primaryColor,
   },
   textName: {
