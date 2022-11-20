@@ -30,8 +30,6 @@ const HomeScreen = props => {
   const [categories, setCategories] = useState([]);
   const [dataProducts, setDataProducts] = useState([]);
   const [dataNews, setDataNews] = useState([]);
-  // const [shoesData, setShoesData] = useState([]);
-  // const [shirtData, setShirtData] = useState([]);
   const [loading, setLoading] = useState(true);
   function limit(c) {
     return this.filter((x, i) => {
@@ -152,10 +150,6 @@ const HomeScreen = props => {
       });
     return () => subscriber();
   }, []);
-  // useEffect(() => {
-  //   setShoesData(dataProducts.filter(item => item.category === 'Shoes'));
-  //   setShirtData(dataProducts.filter(item => item.category === 'T-Shirts'));
-  // }, [dataProducts]);
 
   // Flatlist horizontal
   const renderItem = ({item}) => {

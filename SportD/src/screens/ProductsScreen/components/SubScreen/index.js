@@ -26,6 +26,7 @@ const SubScreen = props => {
   const renderItem = ({item, index}) => {
     return (
       <TouchableOpacity
+        key={item.name}
         onPress={() => {
           navigation.navigate('DetailsScreen', {
             item: item,

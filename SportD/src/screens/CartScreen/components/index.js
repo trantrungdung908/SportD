@@ -13,7 +13,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import firestore from '@react-native-firebase/firestore';
 const CartItem = props => {
   const {itemData, setTotalPrice} = props;
-  // console.log('ITEM', itemData);
   const [quantity, setQuantity] = useState(itemData.quantity);
   const [cartData, setCartData] = useState([]);
   // console.log('ITEM', cartData);
@@ -110,7 +109,11 @@ const CartItem = props => {
         <Image style={styles.img_Product} source={{uri: itemData.imgProduct}} />
         <View style={styles.view_Info}>
           <Text style={styles.text_Info}>{itemData.name}</Text>
-          <Text style={styles.text_Size}>{`Size:${itemData.size}`}</Text>
+          {itemData.size !== undefined ? (
+            <Text style={styles.text_Size}>{`Size:${itemData?.size}`}</Text>
+          ) : (
+            <View style={{marginTop: 10}} />
+          )}
           <Text style={styles.text_Info}>{`$${itemData.price}`}</Text>
           <View style={styles.view_Qty}>
             <TouchableOpacity

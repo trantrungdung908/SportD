@@ -47,7 +47,7 @@ const CheckOutScreen = () => {
     console.log(data);
     let payment = JSON.parse(data);
     if (payment.status === 'COMPLETED') {
-      alert('PAYMENT SUCCESSFULLY YOU CAN GO NEXT TO SUCCESS ORDER!');
+      alert('PAYMENT SUCCESSFULLY YOU CAN GO NEXT TO COMPLETE ORDER!');
     } else {
       alert('PAYMENT FAILED!!!PLEASE TRY AGAIN OR TRY OTHER PAYMENT METHOD');
     }

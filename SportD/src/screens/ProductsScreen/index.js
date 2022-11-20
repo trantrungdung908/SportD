@@ -5,10 +5,9 @@ import {
   SafeAreaView,
   FlatList,
   Image,
-  Dimensions,
   TouchableOpacity,
   Platform,
-  ScrollView,
+  VirtualizedList,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import FocusAwareStatusBar from '../components/FocusAwareStatusBar';
@@ -17,7 +16,6 @@ import colors from '../../constants/colors';
 import SubCategory from './components';
 import SubScreen from './components/SubScreen';
 import Loading from '../components/Loading';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import firestore from '@react-native-firebase/firestore';
 import {useDispatch, useSelector} from 'react-redux';
@@ -67,7 +65,12 @@ const Products = () => {
 
     return () => subscriber();
   }, []);
+  // const getItem = (data, index) => ({
+  //   id: Math.random().toString(10).substring(0),
+  //   title: `Item ${index + 1}`,
+  // });
 
+  // const getItemCount = data => 50;
   const renderItem = ({item, index}) => {
     return (
       <TouchableOpacity
@@ -169,7 +172,7 @@ const Products = () => {
       <FocusAwareStatusBar backgroundColor="#fff" barStyle="dark-content" />
       <View>
         <SubCategory
-          data={dataProducts}
+          // data={dataProducts}
           page={page}
           setPage={setPage}
           title={params.item?.catName}
@@ -177,7 +180,16 @@ const Products = () => {
       </View>
 
       {page === 'All' ? (
-        <FlatList data={dataProducts} renderItem={renderItem} numColumns={2} />
+        <FlatList
+          data={[...dataProducts].sort(
+            (a, b) => b.addOn.seconds - a.addOn.seconds,
+          )}
+          initialNumToRender={4}
+          renderItem={renderItem}
+          numColumns={2}
+          // getItem={getItem}
+          // getItemCount={getItemCount}
+        />
       ) : (
         <SubScreen data={dataProducts} page={page} />
       )}

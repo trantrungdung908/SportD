@@ -26,6 +26,7 @@ const DetailsScreen = props => {
   const {params} = route;
   const detailsItem = params.item;
   const [detailsData, setDetailsData] = useState(detailsItem);
+
   const [itemInCart, setItemInCart] = useState([]);
   // console.log('itemInCart', itemInCart);
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
@@ -68,6 +69,7 @@ const DetailsScreen = props => {
     if (!exist) {
       if (selectSize === undefined) {
         alert('Please choose your size');
+        setLoading(false);
         return;
       } else {
         firestore()
@@ -85,12 +87,14 @@ const DetailsScreen = props => {
             setSelectSize();
             setIsSelected();
             setTimeout(() => {
-              setLoading(false);
               alert('Product added to cart');
-            }, 1000);
+            }, 200);
           })
           .catch(err => {
             console.log(err.code);
+          })
+          .finally(() => {
+            setLoading(false);
           });
       }
     } else {
@@ -111,12 +115,14 @@ const DetailsScreen = props => {
             setSelectSize();
             setIsSelected();
             setTimeout(() => {
-              setLoading(false);
               alert('Product added to cart');
-            }, 1500);
+            }, 200);
           })
           .catch(err => {
             console.log(err.code);
+          })
+          .finally(() => {
+            setLoading(false);
           });
       } else {
         firestore()
@@ -126,14 +132,85 @@ const DetailsScreen = props => {
             quantity: exist.quantity + 1,
           })
           .then(() => {
-            setLoading(false);
             setSelectSize();
             setIsSelected();
+          })
+          .finally(() => {
+            setLoading(false);
           });
       }
     }
   };
-
+  const handleAddAccess = async () => {
+    setLoading(true);
+    const exist = itemInCart.find(a => a.name === detailsData.name);
+    if (!exist) {
+      firestore()
+        .collection(`cart-${userId}`)
+        .add({
+          idProduct: detailsData.idProduct,
+          imgProduct: detailsData.imgProducts[0],
+          name: detailsData.name,
+          price: detailsData.price,
+          quantity: 1,
+          addTime: firestore.Timestamp.fromDate(new Date()),
+        })
+        .then(() => {
+          setSelectSize();
+          setIsSelected();
+          setTimeout(() => {
+            alert('Product added to cart');
+          }, 200);
+        })
+        .catch(err => {
+          console.log(err.code);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    } else {
+      if (exist.name !== detailsData.name) {
+        setLoading(true);
+        firestore()
+          .collection(`cart-${userId}`)
+          .add({
+            idProduct: detailsData.idProduct,
+            imgProduct: detailsData.imgProducts[0],
+            name: detailsData.name,
+            price: detailsData.price,
+            quantity: 1,
+            addTime: firestore.Timestamp.fromDate(new Date()),
+          })
+          .then(() => {
+            setSelectSize();
+            setIsSelected();
+            setTimeout(() => {
+              alert('Product added to cart');
+            }, 200);
+          })
+          .catch(err => {
+            console.log(err.code);
+          })
+          .finally(() => {
+            setLoading(false);
+          });
+      } else {
+        firestore()
+          .collection(`cart-${userId}`)
+          .doc(exist.key)
+          .update({
+            quantity: exist.quantity + 1,
+          })
+          .then(() => {
+            setSelectSize();
+            setIsSelected();
+          })
+          .finally(() => {
+            setLoading(false);
+          });
+      }
+    }
+  };
   useEffect(() => {
     const subscriber = firestore()
       .collection(`cart-${userId}`)
@@ -207,7 +284,9 @@ const DetailsScreen = props => {
         <Text style={styles.textPrice}>${detailsData.price}</Text>
         <Text style={styles.textDesc}>{detailsData.description}</Text>
         {/* Sizes */}
-        <Text style={styles.textSize}>Select your size</Text>
+        {detailsData.subCategory === 'Equipment' ? null : (
+          <Text style={styles.textSize}>Select your size</Text>
+        )}
         <View style={styles.viewSizes}>
           {detailsData.sizes.map((item, index) => {
             return (
@@ -246,7 +325,9 @@ const DetailsScreen = props => {
         <TouchableOpacity
           style={styles.btnAdd}
           onPress={() => {
-            handleAddToCart();
+            detailsData.subCategory === 'Equipment'
+              ? handleAddAccess()
+              : handleAddToCart();
           }}>
           {loading === true ? (
             <ActivityIndicator size="small" color="#0000ff" />

@@ -11,7 +11,7 @@ import colors from '../../../constants/colors';
 import firestore from '@react-native-firebase/firestore';
 
 const SubCategory = props => {
-  const {data, page, setPage, title} = props;
+  const {page, setPage, title} = props;
 
   const [subCategories, setSubCategories] = useState([]);
 
@@ -33,33 +33,12 @@ const SubCategory = props => {
     return () => subscriber();
   }, []);
 
-  // const renderItem = ({item}) => {
-  //   return (
-  //     <TouchableOpacity
-  //       style={[
-  //         styles.btn_Product,
-  //         {
-  //           borderBottomWidth: page === item.subCategory ? 2 : 0,
-  //         },
-  //       ]}
-  //       onPress={() => {
-  //         setPage(item.subCategory);
-  //       }}>
-  //       <Text style={styles.text_subCategory}>{item.subCategory}</Text>
-  //     </TouchableOpacity>
-  //   );
-  // };
   return (
     <ScrollView
       horizontal
       showsVerticalScrollIndicator={false}
       showsHorizontalScrollIndicator={false}>
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
+      <View style={styles.flexRow}>
         <TouchableOpacity
           style={[
             styles.btn_Product,
@@ -99,7 +78,6 @@ const SubCategory = props => {
                       // setPage(item.subCategory);
                       setPage(name);
                     }}>
-                    {/* <Text style={styles.text_subCategory}>{item.subCategory}</Text> */}
                     <Text style={styles.text_subCategory}>{name}</Text>
                   </TouchableOpacity>
                 );
@@ -125,5 +103,10 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Regular',
     fontSize: 14,
     color: colors.primaryColor,
+  },
+  flexRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
