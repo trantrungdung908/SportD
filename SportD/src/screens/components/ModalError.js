@@ -4,7 +4,6 @@ import {images} from '../../constants';
 import {Overlay} from '@rneui/base';
 
 const ModalError = props => {
-  // console.log(props);
   const {hideModal} = props;
   return (
     <Overlay

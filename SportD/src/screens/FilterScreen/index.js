@@ -10,7 +10,7 @@ import {
   Image,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useMemo, memo} from 'react';
 import colors from '../../constants/colors';
 import images from '../../constants/images';
 import firestore from '@react-native-firebase/firestore';
@@ -20,13 +20,13 @@ const FilterScreen = ({navigation}) => {
   const [dataProducts, setDataProducts] = useState([]);
   const [searchText, setSearchText] = useState('');
 
-  const filterProduct = () => {
+  const filterProduct = useMemo(() => {
     return dataProducts.filter(
       lists =>
         lists.name.toLowerCase().includes(searchText.toLowerCase()) ||
         lists.subCategory.toLowerCase().includes(searchText.toLowerCase()),
     );
-  };
+  }, [searchText]);
   const renderItem = ({item, index}) => {
     return <ListSearchProducts list={item} index={index} />;
   };
@@ -81,7 +81,6 @@ const FilterScreen = ({navigation}) => {
           )}
           <TouchableOpacity
             onPress={() => {
-              // navigation.goBack();
               setSearchText('');
             }}>
             <Ionicons name="close-outline" style={styles.icon_Search} />
@@ -90,7 +89,7 @@ const FilterScreen = ({navigation}) => {
       </View>
 
       <View style={{flex: 1}}>
-        {filterProduct()?.length > 0 && searchText?.length > 0 ? (
+        {filterProduct?.length > 0 && searchText?.length > 0 ? (
           <View>
             <Text
               style={{
@@ -100,10 +99,10 @@ const FilterScreen = ({navigation}) => {
                 fontFamily: 'Poppins-Regular',
                 color: colors.primaryColor,
               }}>
-              Found {filterProduct()?.length} results
+              Found {filterProduct?.length} results
             </Text>
             <FlatList
-              data={filterProduct()}
+              data={filterProduct}
               numColumns={2}
               renderItem={renderItem}
               showsHorizontalScrollIndicator={false}
@@ -148,7 +147,7 @@ const FilterScreen = ({navigation}) => {
   );
 };
 
-export default FilterScreen;
+export default memo(FilterScreen);
 
 const styles = StyleSheet.create({
   container: {flex: 1, backgroundColor: '#fff'},

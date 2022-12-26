@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, memo} from 'react';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import firestore from '@react-native-firebase/firestore';
 import {useDispatch, useSelector} from 'react-redux';
@@ -16,13 +16,8 @@ const SubScreen = props => {
   const navigation = useNavigation();
   const {data, page} = props;
   const userId = useSelector(state => state.login.currentUser.uid);
-  // const [newData, setNewData] = useState(data);
   const newData = data.filter(item => item.subCategory === page);
-  // useEffect(() => {
-  //   setNewData(data.filter(item => item.subCategory === page));
-  // }, []);
 
-  //  newData = data.filter(item => item.subCategory === page);
   const renderItem = ({item, index}) => {
     return (
       <TouchableOpacity
@@ -44,22 +39,6 @@ const SubScreen = props => {
         <View>
           <Heart
             onPress={async () => {
-              // setIsSelected(!isSelected);
-              // let newProducts = dataProducts.map(eachProduct => {
-              //   if (item.name === eachProduct.name) {
-              //     return {
-              //       ...eachProduct,
-              //       isSelected:
-              //         eachProduct.isSelected === false ||
-              //         eachProduct.isSelected === undefined
-              //           ? true
-              //           : false,
-              //     };
-              //   }
-              //   return eachProduct;
-              // });
-              // setDataProducts(newProducts);
-
               if (item.favorite === undefined || item.favorite.length < 0) {
                 await firestore()
                   .collection(`products`)
@@ -68,16 +47,12 @@ const SubScreen = props => {
                     {
                       favorite: firestore.FieldValue.arrayUnion(
                         ...[{isLike: true, userId: userId}],
-                        // ...[userId],
                       ),
                     },
                     {merge: true},
                   )
                   .then(() => {
                     alert('Product added to wishlist');
-                    // setIsLike(true);
-
-                    // setIsSelected(!isSelected);
                   })
                   .catch(err => {
                     console.log(err.code);
@@ -90,9 +65,6 @@ const SubScreen = props => {
                     .doc(`${item.key}`)
                     .set(
                       {
-                        // favorite: firestore.FieldValue.arrayRemove(
-                        //   ...[{isLike: true, userId: userId}],
-                        // ),
                         favorite: firestore.FieldValue.arrayRemove(
                           ...[{isLike: true, userId: userId}],
                         ),
@@ -101,20 +73,16 @@ const SubScreen = props => {
                     )
                     .then(() => {
                       alert('Product removed from wishlist');
-                      // setIsLike(false);
                     })
                     .catch(err => {
                       console.log(err.code);
                     });
                 } else {
-                  console.log('vc');
                   firestore()
                     .collection(`products`)
                     .doc(`${item.key}`)
                     .set(
                       {
-                        // favorite: [...userId],
-                        // favorite: firestore.FieldValue.arrayUnion(...[userId]),
                         favorite: firestore.FieldValue.arrayUnion(
                           ...[{isLike: true, userId: userId}],
                         ),
@@ -123,8 +91,6 @@ const SubScreen = props => {
                     )
                     .then(() => {
                       alert('Product added to wishlist');
-                      // setIsSelected(!isSelected);
-                      // setIsLike(true);
                     })
                     .catch(err => {
                       console.log(err.code);
@@ -151,7 +117,7 @@ const SubScreen = props => {
   return <FlatList data={newData} renderItem={renderItem} numColumns={2} />;
 };
 
-export default SubScreen;
+export default memo(SubScreen);
 
 const styles = StyleSheet.create({
   container: {

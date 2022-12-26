@@ -6,7 +6,7 @@ import {
   Dimensions,
   TouchableOpacity,
 } from 'react-native';
-import React from 'react';
+import React, {memo} from 'react';
 import {colors, images} from '../../constants';
 import {useNavigation, StackActions} from '@react-navigation/native';
 
@@ -75,7 +75,7 @@ const OrderSuccess = () => {
   );
 };
 
-export default OrderSuccess;
+export default memo(OrderSuccess);
 
 const styles = StyleSheet.create({
   container: {

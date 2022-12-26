@@ -11,26 +11,23 @@ import {
   Image,
   ScrollView,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, memo} from 'react';
 import {useNavigation, useRoute, useIsFocused} from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useSelector} from 'react-redux';
 import FocusAwareStatusBar from '../components/FocusAwareStatusBar';
 import Loading from '../components/Loading';
 import colors from '../../constants/colors';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import firestore from '@react-native-firebase/firestore';
 import ListItem from './components';
 
 const windowWeight = Dimensions.get('window').width;
 const HomeScreen = props => {
   const navigation = useNavigation();
-  const route = useRoute();
-  const {params} = route;
+  // const route = useRoute();
   const [categories, setCategories] = useState([]);
   const [dataProducts, setDataProducts] = useState([]);
   const [dataNews, setDataNews] = useState([]);
   const [loading, setLoading] = useState(true);
+
   function limit(c) {
     return this.filter((x, i) => {
       if (i <= c - 1) {
@@ -206,24 +203,6 @@ const HomeScreen = props => {
         <ScrollView style={styles.container}>
           {/* Search */}
           <View style={styles.view_Line}>
-            {/* <View style={styles.view_Search}>
-              <Ionicons name="search-outline" style={styles.icon_Search} />
-              {Platform.OS === 'ios' ? (
-                <TextInput
-                  placeholder="Search"
-                  placeholderTextColor={'#C9C9C9'}
-                  selectionColor={Platform.OS === 'ios' ? '#000' : '#fff'}
-                  style={styles.input_Search}
-                />
-              ) : (
-                <TextInput
-                  placeholder="Search"
-                  placeholderTextColor={'#C9C9C9'}
-                  cursorColor={Platform.OS === 'android' ? '#000' : '#fff'}
-                  style={styles.input_Search}
-                />
-              )}
-            </View> */}
             <View style={styles.view_Header}>
               <Text style={styles.text_Header}>Find your best equipment</Text>
             </View>
@@ -245,7 +224,7 @@ const HomeScreen = props => {
           </View>
 
           <ListItem
-            data={dataProducts.sort(() => Math.random() - 0.5).limit(10)}
+            data={[...dataProducts].sort(() => Math.random() - 0.5).limit(10)}
             title={'Featured Product'}
           />
           {/* <ListItem data={shirtData} title={'Featured Product'} /> */}
@@ -293,7 +272,7 @@ const HomeScreen = props => {
   );
 };
 
-export default HomeScreen;
+export default memo(HomeScreen);
 
 const styles = StyleSheet.create({
   container: {

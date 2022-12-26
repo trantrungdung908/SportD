@@ -6,7 +6,7 @@ import {
   View,
   Image,
 } from 'react-native';
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, memo} from 'react';
 import colors from '../../constants/colors';
 import images from '../../constants/images';
 import {useNavigation, StackActions} from '@react-navigation/native';
@@ -198,7 +198,7 @@ const OrderHistoryScreen = () => {
   );
 };
 
-export default OrderHistoryScreen;
+export default memo(OrderHistoryScreen);
 
 const styles = StyleSheet.create({
   container: {

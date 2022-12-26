@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   Platform,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useCallback, useState, memo} from 'react';
 import {colors, images} from '../../constants';
 import {isValidEmail} from '../../ultilies/Validate';
 import {auth, sendPasswordResetEmail} from '../../../firebase/config';
@@ -28,7 +28,7 @@ const ForgetSceen = () => {
   const isValid = () => {
     return isValidEmail(email) && email.length > 0;
   };
-  const handleForget = () => {
+  const handleForget = useCallback(() => {
     setIsLoading(true);
     sendPasswordResetEmail(auth, email)
       .then(() => {
@@ -43,7 +43,7 @@ const ForgetSceen = () => {
       .finally(() => {
         setIsLoading(false);
       });
-  };
+  }, [isLoading]);
   const handleOverlay = () => {
     setDisplayModal(!displayModal);
   };
@@ -75,6 +75,7 @@ const ForgetSceen = () => {
             selectionColor={'#000'}
             style={styles.textInput}
             placeholder="Your email"
+            placeholderTextColor={'#BDBDBD'}
             autoCapitalize="none"
             value={email}
             onChangeText={value => {
@@ -115,7 +116,7 @@ const ForgetSceen = () => {
   );
 };
 
-export default ForgetSceen;
+export default memo(ForgetSceen);
 
 const styles = StyleSheet.create({
   container: {

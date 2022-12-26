@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   Platform,
 } from 'react-native';
-import React, {useState, useRef, useEffect} from 'react';
+import React, {useState, memo, useEffect} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import HomeScreen from '../../screens/HomeScreen';
 import Products from '../../screens/ProductsScreen';
@@ -35,7 +35,6 @@ import firestore from '@react-native-firebase/firestore';
 import {useSelector} from 'react-redux';
 
 const Tab = createBottomTabNavigator();
-// const TopTab = createMaterialTopTabNavigator();
 const MainStack = () => {
   const [cartData, setCartData] = useState([]);
   const userId = useSelector(state => state.login.currentUser.uid);
@@ -253,7 +252,7 @@ const MainStack = () => {
   );
 };
 
-export default MainStack;
+export default memo(MainStack);
 
 const HomeStack = createNativeStackNavigator();
 const SearchStack = createNativeStackNavigator();
@@ -532,8 +531,6 @@ const SearchStackScreen = ({navigation}) => {
         tabBarShowLabel: false,
         headerBackTitleVisible: false,
         headerTintColor: '#000',
-        // cardOverlayEnabled: true,
-        // ...TransitionPresets.ModalPresentationIOS,
       }}>
       <SearchStack.Screen
         options={{

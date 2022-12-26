@@ -19,7 +19,7 @@ import {useNavigation} from '@react-navigation/native';
 import FocusAwareStatusBar from '../components/FocusAwareStatusBar';
 import ModalSuccess from '../components/ModalSuccess';
 import ModalError from '../components/ModalError';
-import React, {useState, useEffect} from 'react';
+import React, {useState, memo} from 'react';
 import {
   isValidPasswordLength,
   isValidPasswordUpper,
@@ -51,10 +51,10 @@ const SignUp = props => {
   const [displayModal, setDisplayModal] = useState(false);
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
-  const [phone, setPhone] = useState('');
+  // const [phone, setPhone] = useState('');
 
   const [pass, setPass] = useState('');
-  const [checkUsername, setCheckUsername] = useState('');
+  // const [checkUsername, setCheckUsername] = useState('');
   const handleRegister = () => {
     setIsLoading(true);
     //register with Email & password
@@ -66,16 +66,6 @@ const SignUp = props => {
             displayName: username,
           })
             .then(() => {
-              // let users = {
-              //   email: user.email,
-              //   emailVerified: user.emailVerified,
-              //   accessToken: user.accessToken,
-              //   displayName: user.displayName,
-              //   phone: '',
-              //   country: '',
-              //   city: '',
-              //   userImg: null,
-              // };
               // Save to FB
               firestore()
                 .collection('users')
@@ -93,14 +83,14 @@ const SignUp = props => {
                 })
 
                 .then(() => {
-                  console.log('SUCCESS');
+                  // console.log('SUCCESS');
                 })
                 .catch(error => {
-                  console.log(error);
+                  // console.log(error);
                 });
             })
             .catch(error => {
-              console.log('error', error);
+              // console.log('error', error);
             });
         }
         // sendEmailVerification(user).then(() => {
@@ -163,6 +153,7 @@ const SignUp = props => {
                   value={email}
                   style={styles.textInput}
                   placeholder="example@gmail.com"
+                  placeholderTextColor={'#BDBDBD'}
                   autoCapitalize="none"
                   onChangeText={text => {
                     setEmail(text);
@@ -185,6 +176,7 @@ const SignUp = props => {
                   value={username}
                   style={styles.textInput}
                   placeholder="Your username"
+                  placeholderTextColor={'#BDBDBD'}
                   autoCapitalize="none"
                   onChangeText={text => {
                     setUsername(text);
@@ -197,23 +189,6 @@ const SignUp = props => {
                   <Feather name="check" color="#35AC5E" size={20} />
                 )}
               </View>
-              {/* Phone */}
-              {/* <Text style={[styles.text_footer, {marginTop: 25}]}>
-              Phone number
-            </Text>
-            <View style={styles.action}>
-              <Feather name="phone" color="#000" size={20} />
-              <TextInput
-                value={phone}
-                style={styles.textInput}
-                placeholder="Your number"
-                keyboardType="number-pad"
-                autoCapitalize="none"
-                onChangeText={value => {
-                  setPhone(value);
-                }}
-              />
-            </View> */}
 
               <Text style={[styles.text_footer, {marginTop: 25}]}>
                 Password<Text style={{color: 'red'}}>*</Text>
@@ -224,6 +199,7 @@ const SignUp = props => {
                   value={pass}
                   style={styles.textInput}
                   placeholder="Your password"
+                  placeholderTextColor={'#BDBDBD'}
                   autoCapitalize="none"
                   secureTextEntry={isShow == true ? false : true}
                   onChangeText={value => {
@@ -379,7 +355,7 @@ const SignUp = props => {
   );
 };
 
-export default SignUp;
+export default memo(SignUp);
 
 const styles = StyleSheet.create({
   container: {

@@ -9,7 +9,7 @@ import {
   Alert,
   Platform,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, memo} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import colors from '../../constants/colors';
 import {logout} from '../LoginScreen/action';
@@ -75,7 +75,7 @@ const ProfileScreen = () => {
         }
       })
       .catch(error => {
-        console.log(error);
+        // console.log(error);
       });
   };
   // const getUser = async () => {
@@ -238,7 +238,7 @@ const ProfileScreen = () => {
   );
 };
 
-export default ProfileScreen;
+export default memo(ProfileScreen);
 
 const styles = StyleSheet.create({
   container: {

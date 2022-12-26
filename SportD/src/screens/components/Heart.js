@@ -1,5 +1,5 @@
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, {useState} from 'react';
+import {TouchableOpacity} from 'react-native';
+import React, {useState, memo} from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const Heart = props => {
@@ -68,28 +68,6 @@ const Heart = props => {
       </TouchableOpacity>
     );
   }
-
-  // return (
-  //   <TouchableOpacity
-  //     onPress={onPress}
-  //     style={{
-  //       backgroundColor: '#fff',
-  //       position: 'absolute',
-  //       borderRadius: 20,
-  //       zIndex: 1,
-  //       right: 10,
-  //       top: 10,
-  //       padding: 10,
-  //     }}>
-  //     <Ionicons
-  //       style={{fontSize: 20, color: '#000'}}
-  //       // name={isLike === true ? 'heart' : 'heart-outline'}
-  //       name={'heart-outline'}
-  //     />
-  //   </TouchableOpacity>
-  // );
 };
 
-export default Heart;
-
-const styles = StyleSheet.create({});
+export default memo(Heart);

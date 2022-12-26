@@ -11,7 +11,7 @@ import {
   Alert,
   ActivityIndicator,
 } from 'react-native';
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback, memo} from 'react';
 import colors from '../../constants/colors';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import FocusAwareStatusBar from '../components/FocusAwareStatusBar';
@@ -26,9 +26,7 @@ const DetailsScreen = props => {
   const {params} = route;
   const detailsItem = params.item;
   const [detailsData, setDetailsData] = useState(detailsItem);
-
   const [itemInCart, setItemInCart] = useState([]);
-  // console.log('itemInCart', itemInCart);
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const [isSelected, setIsSelected] = useState();
   const [selectSize, setSelectSize] = useState();
@@ -63,7 +61,7 @@ const DetailsScreen = props => {
     );
   };
   //handle addtoCart
-  const handleAddToCart = async () => {
+  const handleAddToCart = useCallback(async () => {
     setLoading(true);
     const exist = itemInCart.find(a => a.size === selectSize);
     if (!exist) {
@@ -140,8 +138,8 @@ const DetailsScreen = props => {
           });
       }
     }
-  };
-  const handleAddAccess = async () => {
+  }, [loading, selectSize]);
+  const handleAddAccess = useCallback(async () => {
     setLoading(true);
     const exist = itemInCart.find(a => a.name === detailsData.name);
     if (!exist) {
@@ -210,7 +208,7 @@ const DetailsScreen = props => {
           });
       }
     }
-  };
+  }, [loading, itemInCart]);
   useEffect(() => {
     const subscriber = firestore()
       .collection(`cart-${userId}`)
@@ -284,7 +282,7 @@ const DetailsScreen = props => {
         <Text style={styles.textPrice}>${detailsData.price}</Text>
         <Text style={styles.textDesc}>{detailsData.description}</Text>
         {/* Sizes */}
-        {detailsData.subCategory === 'Equipment' ? null : (
+        {detailsData.category === 'Accessories' ? null : (
           <Text style={styles.textSize}>Select your size</Text>
         )}
         <View style={styles.viewSizes}>
@@ -325,7 +323,7 @@ const DetailsScreen = props => {
         <TouchableOpacity
           style={styles.btnAdd}
           onPress={() => {
-            detailsData.subCategory === 'Equipment'
+            detailsData.category === 'Accessories'
               ? handleAddAccess()
               : handleAddToCart();
           }}>
@@ -340,7 +338,7 @@ const DetailsScreen = props => {
   );
 };
 
-export default DetailsScreen;
+export default memo(DetailsScreen);
 
 const styles = StyleSheet.create({
   container: {

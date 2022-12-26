@@ -140,33 +140,33 @@
 //   },
 // ];
 
-export const data = [
-  {
-    name: 'Nike Zoom Mercurial Vapor 15 Academy TF ',
-    price: 75,
-    category: 'Shoes',
-    subCategory: 'Football Shoes',
-    imgProducts: [
-      'https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/b87f1776-d1bc-4a5f-be4e-e9b39c8773f8/zoom-mercurial-vapor-15-academy-tf-football-shoes-L8JgP4.png',
-      'https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/6128a064-02c0-4cdf-9461-5174f148a90f/zoom-mercurial-vapor-15-academy-tf-football-shoes-L8JgP4.png',
-      'https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/1139e50d-288b-470f-b107-4958c5a25f02/zoom-mercurial-vapor-15-academy-tf-football-shoes-L8JgP4.png',
-    ],
-    description:
-      "The pitch is yours when you lace up in the Vapor 15 Academy TF. It's loaded with a Zoom Air unit and flexible NikeSkin up top for exceptional touch, so you can dominate in the waning minutes of a match—when it matters most. Fast is in the Air.",
-    sizes: [38, 39, 40],
-  },
-  {
-    name: 'Nike Zoom ',
-    price: 12,
-    category: 'Shoes',
-    subCategory: 'Football Shoes',
-    imgProducts: [
-      'https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/b87f1776-d1bc-4a5f-be4e-e9b39c8773f8/zoom-mercurial-vapor-15-academy-tf-football-shoes-L8JgP4.png',
-      'https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/6128a064-02c0-4cdf-9461-5174f148a90f/zoom-mercurial-vapor-15-academy-tf-football-shoes-L8JgP4.png',
-      'https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/1139e50d-288b-470f-b107-4958c5a25f02/zoom-mercurial-vapor-15-academy-tf-football-shoes-L8JgP4.png',
-    ],
-    description:
-      "The pitch is yours when you lace up in the Vapor 15 Academy TF. It's loaded with a Zoom Air unit and flexible NikeSkin up top for exceptional touch, so you can dominate in the waning minutes of a match—when it matters most. Fast is in the Air.",
-    sizes: [38, 39, 40],
-  },
-];
+// export const data = [
+//   {
+//     name: 'Nike Zoom Mercurial Vapor 15 Academy TF ',
+//     price: 75,
+//     category: 'Shoes',
+//     subCategory: 'Football Shoes',
+//     imgProducts: [
+//       'https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/b87f1776-d1bc-4a5f-be4e-e9b39c8773f8/zoom-mercurial-vapor-15-academy-tf-football-shoes-L8JgP4.png',
+//       'https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/6128a064-02c0-4cdf-9461-5174f148a90f/zoom-mercurial-vapor-15-academy-tf-football-shoes-L8JgP4.png',
+//       'https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/1139e50d-288b-470f-b107-4958c5a25f02/zoom-mercurial-vapor-15-academy-tf-football-shoes-L8JgP4.png',
+//     ],
+//     description:
+//       "The pitch is yours when you lace up in the Vapor 15 Academy TF. It's loaded with a Zoom Air unit and flexible NikeSkin up top for exceptional touch, so you can dominate in the waning minutes of a match—when it matters most. Fast is in the Air.",
+//     sizes: [38, 39, 40],
+//   },
+//   {
+//     name: 'Nike Zoom ',
+//     price: 12,
+//     category: 'Shoes',
+//     subCategory: 'Football Shoes',
+//     imgProducts: [
+//       'https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/b87f1776-d1bc-4a5f-be4e-e9b39c8773f8/zoom-mercurial-vapor-15-academy-tf-football-shoes-L8JgP4.png',
+//       'https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/6128a064-02c0-4cdf-9461-5174f148a90f/zoom-mercurial-vapor-15-academy-tf-football-shoes-L8JgP4.png',
+//       'https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/1139e50d-288b-470f-b107-4958c5a25f02/zoom-mercurial-vapor-15-academy-tf-football-shoes-L8JgP4.png',
+//     ],
+//     description:
+//       "The pitch is yours when you lace up in the Vapor 15 Academy TF. It's loaded with a Zoom Air unit and flexible NikeSkin up top for exceptional touch, so you can dominate in the waning minutes of a match—when it matters most. Fast is in the Air.",
+//     sizes: [38, 39, 40],
+//   },
+// ];

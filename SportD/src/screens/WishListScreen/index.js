@@ -8,7 +8,7 @@ import {
   Platform,
   SafeAreaView,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState, memo} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import colors from '../../constants/colors';
@@ -87,12 +87,12 @@ const WishListScreen = () => {
     );
   };
 
-  const handleEdit = () => {
+  const handleEdit = useCallback(() => {
     navigation.addListener('focus', () => {
       setIsHidden(true);
     });
     setIsHidden(!isHidden);
-  };
+  }, [isHidden, navigation]);
   useEffect(() => {
     const subscriber = firestore()
       .collection('products')
@@ -156,7 +156,7 @@ const WishListScreen = () => {
   );
 };
 
-export default WishListScreen;
+export default memo(WishListScreen);
 
 const styles = StyleSheet.create({
   container: {

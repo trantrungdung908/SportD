@@ -6,7 +6,7 @@ import {
   TextInput,
   TouchableOpacity,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useState, memo} from 'react';
 import {images} from '../../../constants';
 import Feather from 'react-native-vector-icons/Feather';
 import {
@@ -58,15 +58,6 @@ const ChangePass = () => {
             });
         })
         .catch(error => {
-          console.log('ERRORCODE', error.code);
-          // if (error.code === 'auth') {
-          //   setErrorMess('');
-          // }
-          // if (error.code === 'auth/too-many-requests') {
-          //   setErrorMess(
-          //     'Your new password cannot be the same as your current password !!!',
-          //   );
-          // }
           if (error.code === 'auth/wrong-password') {
             setErrorMess('Your current password is wrong !!!');
           }
@@ -187,7 +178,7 @@ const ChangePass = () => {
   );
 };
 
-export default ChangePass;
+export default memo(ChangePass);
 
 const styles = StyleSheet.create({
   action: {

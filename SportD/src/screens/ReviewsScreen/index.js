@@ -10,7 +10,7 @@ import {
   ScrollView,
   Dimensions,
 } from 'react-native';
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback, memo, useMemo} from 'react';
 import colors from '../../constants/colors';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -33,8 +33,13 @@ const ReviewsScreen = () => {
   const [message, setMessage] = useState('');
   const [review, setReview] = useState([]);
 
-  const averageRating =
-    review?.reduce((total, next) => total + next.rating, 0) / review?.length;
+  // const averageRating = review?.reduce((total, next) => total + next.rating, 0) / review?.length;
+
+  const averageRating = useMemo(() => {
+    return (
+      review?.reduce((total, next) => total + next.rating, 0) / review?.length
+    );
+  }, [review]);
   const CustomRating = () => {
     return (
       <View
@@ -58,7 +63,7 @@ const ReviewsScreen = () => {
       </View>
     );
   };
-  const handleSubmit = async () => {
+  const handleSubmit = useCallback(async () => {
     if (title === '' || message === '') {
       alert('You must fill this before submit');
     } else {
@@ -76,14 +81,14 @@ const ReviewsScreen = () => {
         .then(() => {
           setTitle('');
           setMessage('');
-          setModalVisible(false);
           setDefaultValue(5);
+          setModalVisible(false);
         })
         .catch(err => {
           console.log(err.code);
         });
     }
-  };
+  }, [title, message, defaultValue]);
 
   useEffect(() => {
     const subscriber = firestore()
@@ -185,6 +190,7 @@ const ReviewsScreen = () => {
                   <View style={styles.action}>
                     <TextInput
                       style={styles.textInput}
+                      placeholderTextColor={'#ccc'}
                       onChangeText={title => {
                         setTitle(title);
                       }}
@@ -193,6 +199,7 @@ const ReviewsScreen = () => {
                   </View>
                   <View style={styles.action}>
                     <TextInput
+                      placeholderTextColor={'#ccc'}
                       onChangeText={value => {
                         setMessage(value);
                       }}
@@ -220,7 +227,7 @@ const ReviewsScreen = () => {
   );
 };
 
-export default ReviewsScreen;
+export default memo(ReviewsScreen);
 
 const styles = StyleSheet.create({
   container: {

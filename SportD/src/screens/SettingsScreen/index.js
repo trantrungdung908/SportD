@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   Alert,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {memo} from 'react';
 import {colors} from '../../constants';
 import firestore from '@react-native-firebase/firestore';
 import {auth} from '../../../firebase/config';
@@ -211,7 +211,7 @@ const SettingsScreen = () => {
   );
 };
 
-export default SettingsScreen;
+export default memo(SettingsScreen);
 
 const styles = StyleSheet.create({
   container: {

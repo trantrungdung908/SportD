@@ -12,6 +12,7 @@ import com.facebook.soloader.SoLoader;
 import com.sportd.newarchitecture.MainApplicationReactNativeHost;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+import com.razorpay.rn.RazorpayPackage;
 import com.facebook.react.bridge.JSIModulePackage; // <- add
 import com.swmansion.reanimated.ReanimatedJSIModulePackage; // <- add
 

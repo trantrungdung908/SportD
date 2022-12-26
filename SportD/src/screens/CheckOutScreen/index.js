@@ -12,7 +12,8 @@ import {
 } from 'react-native';
 import {WebView} from 'react-native-webview';
 import Feather from 'react-native-vector-icons/Feather';
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect, useRef, useCallback, memo} from 'react';
+import RazorpayCheckout from 'react-native-razorpay';
 import {useSelector} from 'react-redux';
 import {RadioButton} from 'react-native-paper';
 import firestore from '@react-native-firebase/firestore';
@@ -41,18 +42,108 @@ const CheckOutScreen = () => {
   const [showGateway, setShowGateway] = useState(false);
   const [prog, setProg] = useState(false);
   const [progClr, setProgClr] = useState('#000');
+  let options = {
+    description: 'Credits towards consultation',
+    currency: 'INR',
+    key: 'rzp_test_s5Mx7vqAOPFxVb',
+    amount: params?.total * 81,
+    name: user?.displayName,
+    prefill: {
+      email: 'trantrungdung908@gmail.com',
+      contact: '0961371906',
+      name: 'TrungDung',
+    },
+    theme: {color: '#000 '},
+  };
+
+  const btnOpen = () => {
+    setChecked('Razorpay');
+    RazorpayCheckout.open(options)
+      .then(async () => {
+        // handle success
+        // alert(`PAYMENT SUCCESSFULLY YOU CAN GO NEXT TO COMPLETE ORDER`);
+        const docRef = firestore()
+          .collection('orders')
+          .doc(new Date().getTime().toString());
+        await docRef
+          .set({
+            orderId: docRef.id,
+            orderUserId: userId,
+            orderData: params?.cartData,
+            orderDeliveryStatus: 'Pending',
+            orderDate: firestore.Timestamp.fromDate(new Date()),
+            orderAddress: locate || user?.address,
+            orderPhone: phoneNumber || user.phone,
+            orderName: name || user.displayName,
+            orderPayment: checked,
+            orderCost: params?.total,
+          })
+          .then(async () => {
+            await firestore()
+              .collection(`cart-${userId}`)
+              .get()
+              .then(res => {
+                res.forEach(e => {
+                  e.ref.delete();
+                });
+              });
+            setTimeout(() => {
+              navigation.navigate('OrderSuccess');
+            }, 500);
+          })
+          .catch(err => {
+            console.log(err.code);
+          });
+      })
+      .catch(error => {
+        // handle failure
+        // console.log(` ${error.description}`);
+        setChecked('Cash on Delivery');
+      });
+  };
   function onMessage(e) {
     let data = e.nativeEvent.data;
     setShowGateway(false);
-    console.log(data);
     let payment = JSON.parse(data);
     if (payment.status === 'COMPLETED') {
-      alert('PAYMENT SUCCESSFULLY YOU CAN GO NEXT TO COMPLETE ORDER!');
+      const docRef = firestore()
+        .collection('orders')
+        .doc(new Date().getTime().toString());
+      docRef
+        .set({
+          orderId: docRef.id,
+          orderUserId: userId,
+          orderData: params?.cartData,
+          orderDeliveryStatus: 'Pending',
+          orderDate: firestore.Timestamp.fromDate(new Date()),
+          orderAddress: locate || user?.address,
+          orderPhone: phoneNumber || user.phone,
+          orderName: name || user.displayName,
+          orderPayment: checked,
+          orderCost: params?.total,
+        })
+        .then(() => {
+          firestore()
+            .collection(`cart-${userId}`)
+            .get()
+            .then(res => {
+              res.forEach(e => {
+                e.ref.delete();
+              });
+            });
+          setTimeout(() => {
+            navigation.navigate('OrderSuccess');
+          }, 500);
+        })
+        .catch(err => {
+          console.log(err.code);
+        });
     } else {
       alert('PAYMENT FAILED!!!PLEASE TRY AGAIN OR TRY OTHER PAYMENT METHOD');
+      setChecked('Cash on Delivery');
     }
   }
-  const handlePay = async () => {
+  const handlePay = useCallback(async () => {
     setLoading(true);
     const docRef = firestore()
       .collection('orders')
@@ -87,7 +178,7 @@ const CheckOutScreen = () => {
       .catch(err => {
         console.log(err.code);
       });
-  };
+  }, [loading, navigation]);
 
   useEffect(() => {
     const subscriber = firestore()
@@ -102,10 +193,10 @@ const CheckOutScreen = () => {
       });
     return () => subscriber();
   }, []);
-  const handleWebView = () => {
+  const handleWebView = useCallback(() => {
     setChecked('Paypal');
     setShowGateway(true);
-  };
+  }, [checked]);
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
@@ -239,6 +330,23 @@ const CheckOutScreen = () => {
                 />
                 <Text style={styles.textMethod}>Paypal</Text>
               </View>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <RadioButton
+                  value="Razorpay"
+                  status={checked === 'Razorpay' ? 'checked' : 'unchecked'}
+                  onPress={() => {
+                    btnOpen();
+                  }}
+                />
+                <Text
+                  style={{
+                    fontFamily: 'Poppins-Regular',
+                    fontSize: 16,
+                    color: colors.primaryColor,
+                  }}>
+                  Razorpay
+                </Text>
+              </View>
             </View>
           </View>
         </View>
@@ -274,7 +382,10 @@ const CheckOutScreen = () => {
             <View style={styles.wbHead}>
               <TouchableOpacity
                 style={{padding: 13}}
-                onPress={() => setShowGateway(false)}>
+                onPress={() => {
+                  setShowGateway(false);
+                  setChecked('Cash on Delivery');
+                }}>
                 <Feather name={'x'} size={24} />
               </TouchableOpacity>
               <Text style={styles.textGateway}>PayPal GateWay</Text>
@@ -310,7 +421,7 @@ const CheckOutScreen = () => {
   );
 };
 
-export default CheckOutScreen;
+export default memo(CheckOutScreen);
 
 const styles = StyleSheet.create({
   container: {

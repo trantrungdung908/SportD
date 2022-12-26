@@ -6,7 +6,7 @@ import {
   Image,
   Alert,
 } from 'react-native';
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback, memo} from 'react';
 import colors from '../../../constants/colors';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -18,54 +18,46 @@ const CartItem = props => {
   // console.log('ITEM', cartData);
 
   // handleQuantity
-  const handleQuantity = async type => {
-    let stringUser = await AsyncStorage.getItem('user');
-    let myUserId = JSON.parse(stringUser).uid;
-    if (type === 'desc') {
-      quantity > 1 && setQuantity(quantity - 1);
-      await firestore()
-        .collection(`cart-${myUserId}`)
-        .doc(itemData.key)
-        .update({
-          quantity: quantity - 1,
-        })
-        .then(() => {
-          console.log('Change quantity');
-        })
-        .catch(error => {
-          console.log('ERROR', error);
-        });
-    } else {
-      setQuantity(quantity + 1);
-      await firestore()
-        .collection(`cart-${myUserId}`)
-        .doc(itemData.key)
-        .update({
-          quantity: quantity + 1,
-        })
-        .then(() => {
-          console.log('Change quantity');
-        })
-        .catch(error => {
-          console.log('ERROR', error);
-        });
-    }
-  };
+  const handleQuantity = useCallback(
+    async type => {
+      let stringUser = await AsyncStorage.getItem('user');
+      let myUserId = JSON.parse(stringUser).uid;
+      if (type === 'desc') {
+        quantity > 1 && setQuantity(quantity - 1);
+        await firestore()
+          .collection(`cart-${myUserId}`)
+          .doc(itemData.key)
+          .update({
+            quantity: quantity - 1,
+          })
+          .then(() => {})
+          .catch(error => {});
+      } else {
+        setQuantity(quantity + 1);
+        await firestore()
+          .collection(`cart-${myUserId}`)
+          .doc(itemData.key)
+          .update({
+            quantity: quantity + 1,
+          })
+          .then(() => {})
+          .catch(error => {});
+      }
+    },
+    [quantity],
+  );
   // handleDelete
-  const handleDeleteCartItem = async () => {
+  const handleDeleteCartItem = useCallback(async () => {
     let stringUser = await AsyncStorage.getItem('user');
     let myUserId = JSON.parse(stringUser).uid;
     await firestore()
       .collection(`cart-${myUserId}`)
       .doc(itemData.key)
       .delete()
-      .then(() => {
-        console.log('Remove');
-        // setDeleted(true);
-      });
-  };
+      .then(() => {});
+  }, [itemData]);
 
-  const alertLogOut = () => {
+  const alertDelete = useCallback(() => {
     Alert.alert(
       'Do you want to delete?',
       'You can cancel to keep this product.',
@@ -82,25 +74,10 @@ const CartItem = props => {
         },
       ],
     );
-  };
+  }, [itemData]);
 
   useEffect(() => {
-    // const array = [];
-    // array.push(itemData);
     setQuantity(itemData.quantity);
-    // setCartData(array);
-    // const cart = cartData.reduce((acc, item) => {
-    //   const itemTotal = parseFloat((item.price * item.quantity).toFixed(2));
-    //   // const itemTotalTax = parseFloat((itemTotal * taxRate).toFixed(2));
-
-    //   // acc.subtotal = parseFloat((acc.subtotal + itemTotal).toFixed(2));
-    //   // acc.tax = parseFloat((acc.tax + itemTotalTax).toFixed(2));
-    //   acc = parseFloat((acc + itemTotal).toFixed(2));
-
-    //   return acc;
-    // }, 0);
-    // console.log(cart);
-    // setTotalPrice(cart);
   }, [itemData]);
 
   return (
@@ -135,8 +112,7 @@ const CartItem = props => {
             <TouchableOpacity
               style={styles.btn_Close}
               onPress={() => {
-                alertLogOut();
-                // handleDeleteCartItem();
+                alertDelete();
               }}>
               <Ionicons name="trash" style={{fontSize: 22, color: '#000'}} />
             </TouchableOpacity>
@@ -147,7 +123,7 @@ const CartItem = props => {
   );
 };
 
-export default CartItem;
+export default memo(CartItem);
 
 const styles = StyleSheet.create({
   container: {
@@ -157,7 +133,6 @@ const styles = StyleSheet.create({
   view_Cart: {
     padding: 10,
     flexDirection: 'row',
-    // backgroundColor: 'red',
     flex: 1,
   },
   img_Product: {width: 160, height: 160, borderRadius: 10},

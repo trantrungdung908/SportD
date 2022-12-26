@@ -6,15 +6,13 @@ import {
   ScrollView,
   FlatList,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, memo, useCallback} from 'react';
 import colors from '../../../constants/colors';
 import firestore from '@react-native-firebase/firestore';
 
 const SubCategory = props => {
   const {page, setPage, title} = props;
-
   const [subCategories, setSubCategories] = useState([]);
-
   useEffect(() => {
     const subscriber = firestore()
       .collection('categories')
@@ -32,7 +30,6 @@ const SubCategory = props => {
 
     return () => subscriber();
   }, []);
-
   return (
     <ScrollView
       horizontal
@@ -53,29 +50,18 @@ const SubCategory = props => {
         </TouchableOpacity>
         {subCategories.map(item => {
           return (
-            <View
-              key={item.key}
-              style={{
-                flex: 0.5,
-                flexDirection: 'row',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
+            <View key={item.key} style={styles.flexSpace}>
               {item.subCat.map(name => {
                 return (
                   <TouchableOpacity
                     key={name}
-                    // key={item}
                     style={[
                       styles.btn_Product,
-
                       {
-                        // borderBottomWidth: page === item.subCategory ? 2 : 0,
                         borderBottomWidth: page === name ? 2 : 0,
                       },
                     ]}
                     onPress={() => {
-                      // setPage(item.subCategory);
                       setPage(name);
                     }}>
                     <Text style={styles.text_subCategory}>{name}</Text>
@@ -90,7 +76,7 @@ const SubCategory = props => {
   );
 };
 
-export default SubCategory;
+export default memo(SubCategory);
 
 const styles = StyleSheet.create({
   btn_Product: {
@@ -105,6 +91,12 @@ const styles = StyleSheet.create({
     color: colors.primaryColor,
   },
   flexRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  flexSpace: {
+    flex: 0.5,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',

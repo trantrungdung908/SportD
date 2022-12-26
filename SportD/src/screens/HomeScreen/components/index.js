@@ -6,7 +6,7 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native';
-import React from 'react';
+import React, {memo} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import colors from '../../../constants/colors';
 
@@ -66,12 +66,6 @@ const ListItem = props => {
           }}>
           {title}
         </Text>
-        {/* <TouchableOpacity
-          onPress={() => {
-            navigation.navigate('Products', {});
-          }}>
-          <Text>See more</Text>
-        </TouchableOpacity> */}
       </View>
       <FlatList
         showsVerticalScrollIndicator={false}
@@ -85,7 +79,7 @@ const ListItem = props => {
   );
 };
 
-export default ListItem;
+export default memo(ListItem);
 
 const styles = StyleSheet.create({
   img_Product: {

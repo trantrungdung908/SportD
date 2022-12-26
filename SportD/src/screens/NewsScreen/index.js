@@ -6,7 +6,7 @@ import {
   Image,
   Dimensions,
 } from 'react-native';
-import React from 'react';
+import React, {memo} from 'react';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import colors from '../../constants/colors';
 const windowWeight = Dimensions.get('window').width;
@@ -36,7 +36,7 @@ const NewsScreen = () => {
   );
 };
 
-export default NewsScreen;
+export default memo(NewsScreen);
 
 const styles = StyleSheet.create({
   container: {

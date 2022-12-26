@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, memo} from 'react';
 import {
   View,
   Text,
@@ -23,8 +23,8 @@ import BottomSheet from 'reanimated-bottom-sheet';
 import ImagePicker from 'react-native-image-crop-picker';
 const EditProfileScreen = () => {
   const route = useRoute();
+  const navigation = useNavigation();
   const {params} = route;
-  // console.log('PARAMS', params.info);
   const [transferred, setTransferred] = useState(0);
   const [localState, setLocalState] = useState(params.info);
   const [email, setEmail] = useState(null);
@@ -36,7 +36,6 @@ const EditProfileScreen = () => {
   //handle updateUser
   const updateUser = async () => {
     let imgUrl = await uploadImage();
-
     let stringUser = await AsyncStorage.getItem('user');
     let myUserId = JSON.parse(stringUser).uid;
     if (imgUrl === false && localState.userImg) {
@@ -58,11 +57,17 @@ const EditProfileScreen = () => {
           Alert.alert(
             'Profile Updated!',
             'Your profile has been updated successfully',
+            [
+              {
+                text: 'OK',
+                onPress: () => {
+                  navigation.goBack();
+                },
+              },
+            ],
           );
         })
-        .catch(error => {
-          console.log('ERROR', error);
-        });
+        .catch(error => {});
     } else {
       const newFieldsWithUrl = {
         email: email || localState.email,
@@ -79,12 +84,18 @@ const EditProfileScreen = () => {
         .then(() => {
           Alert.alert(
             'Profile Updated!',
-            'Your profile has been updated successfully1',
+            'Your profile has been updated successfully',
+            [
+              {
+                text: 'OK',
+                onPress: () => {
+                  navigation.goBack();
+                },
+              },
+            ],
           );
         })
-        .catch(error => {
-          console.log('ERROR', error);
-        });
+        .catch(error => {});
     }
   };
   // handle takePhoto
@@ -95,7 +106,7 @@ const EditProfileScreen = () => {
       cropping: true,
     })
       .then(image => {
-        console.log(image);
+        // console.log(image);
         setImage(image.path);
         bs.current.snapTo(1);
       })
@@ -114,7 +125,7 @@ const EditProfileScreen = () => {
       cropping: true,
     })
       .then(image => {
-        console.log(image);
+        // console.log(image);
         setImage(image.path);
         bs.current.snapTo(1);
       })
@@ -146,9 +157,9 @@ const EditProfileScreen = () => {
 
     // Set transferred state
     task.on('state_changed', taskSnapshot => {
-      console.log(
-        `${taskSnapshot.bytesTransferred} transferred out of ${taskSnapshot.totalBytes}`,
-      );
+      // console.log(
+      //   `${taskSnapshot.bytesTransferred} transferred out of ${taskSnapshot.totalBytes}`,
+      // );
 
       setTransferred(
         Math.round(taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) *
@@ -399,7 +410,7 @@ const EditProfileScreen = () => {
   );
 };
 
-export default EditProfileScreen;
+export default memo(EditProfileScreen);
 
 const styles = StyleSheet.create({
   container: {

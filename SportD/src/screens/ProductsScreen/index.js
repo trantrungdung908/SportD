@@ -2,14 +2,12 @@ import {
   StyleSheet,
   Text,
   View,
-  SafeAreaView,
   FlatList,
   Image,
   TouchableOpacity,
   Platform,
-  VirtualizedList,
 } from 'react-native';
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback, memo} from 'react';
 import FocusAwareStatusBar from '../components/FocusAwareStatusBar';
 import Heart from '../components/Heart';
 import colors from '../../constants/colors';
@@ -28,11 +26,16 @@ const Products = () => {
   const [dataProducts, setDataProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState('All');
+  const handlePage = useCallback(
+    title => {
+      setPage(title);
+    },
+    [page],
+  );
   useEffect(() => {
     const subscriber = firestore()
       .collection('products')
       .where('category', '==', `${params.item?.catName}`)
-      // .where('subCategory', '==', `Football Shoes`)
       .onSnapshot(querySnapshot => {
         const dataCategory = [];
         querySnapshot.forEach(documentSnapshot => {
@@ -44,33 +47,10 @@ const Products = () => {
         setDataProducts(dataCategory);
         setLoading(false);
       });
-    // .catch(error => {
-    //   console.log('error.code', error.code);
-    // });
-    // }, []);
-    // const subscriber = firestore()
-    //   .collection('products')
-    //   .where('category', '==', `${params.item?.catName}`)
-    //   .onSnapshot(querySnapshot => {
-    //     const dataCategory = [];
-    //     querySnapshot.forEach(documentSnapshot => {
-    //       dataCategory.push({
-    //         ...documentSnapshot.data(),
-    //         key: documentSnapshot.id,
-    //       });
-    //     });
-    //     setDataProducts(dataCategory);
-    //     setLoading(false);
-    //   });
 
     return () => subscriber();
   }, []);
-  // const getItem = (data, index) => ({
-  //   id: Math.random().toString(10).substring(0),
-  //   title: `Item ${index + 1}`,
-  // });
 
-  // const getItemCount = data => 50;
   const renderItem = ({item, index}) => {
     return (
       <TouchableOpacity
@@ -172,9 +152,8 @@ const Products = () => {
       <FocusAwareStatusBar backgroundColor="#fff" barStyle="dark-content" />
       <View>
         <SubCategory
-          // data={dataProducts}
           page={page}
-          setPage={setPage}
+          setPage={handlePage}
           title={params.item?.catName}
         />
       </View>
@@ -184,11 +163,8 @@ const Products = () => {
           data={[...dataProducts].sort(
             (a, b) => b.addOn.seconds - a.addOn.seconds,
           )}
-          initialNumToRender={4}
           renderItem={renderItem}
           numColumns={2}
-          // getItem={getItem}
-          // getItemCount={getItemCount}
         />
       ) : (
         <SubScreen data={dataProducts} page={page} />
@@ -199,7 +175,7 @@ const Products = () => {
   );
 };
 
-export default Products;
+export default memo(Products);
 
 const styles = StyleSheet.create({
   container: {

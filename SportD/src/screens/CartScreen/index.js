@@ -6,12 +6,10 @@ import {
   ScrollView,
   Image,
 } from 'react-native';
-import React, {useState, useEffect, useRef, useCallback} from 'react';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import React, {useState, useEffect, memo} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import colors from '../../constants/colors';
 import images from '../../constants/images';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import CartItem from './components';
@@ -21,37 +19,6 @@ const CartScreen = () => {
   const navigation = useNavigation();
   const [cartData, setCartData] = useState([]);
 
-  // const [deleted, setDeleted] = useState(false);
-  // const [loading, setLoading] = useState(true);
-  // const dispatch = useDispatch();
-  // const getCartData = async () => {
-  //   let stringUser = await AsyncStorage.getItem('user');
-  //   let myUserId = JSON.parse(stringUser).uid;
-  //   firestore()
-  //     .collection(`cart-${myUserId}`)
-  //     .orderBy('addTime', 'desc')
-  //     .get()
-  //     .then(querySnapshot => {
-  //       const cartArray = [];
-  //       querySnapshot.forEach(documentSnapshot => {
-  //         cartArray.push({
-  //           ...documentSnapshot.data(),
-  //           key: documentSnapshot.id,
-  //         });
-  //       });
-  //       setCartData(cartArray);
-  //       dispatch(getCartSuccess(cartArray));
-  //     })
-  //     .catch(error => {
-  //       console.log(error.code);
-  //     });
-  // };
-
-  // useEffect(() => {
-  //   getCartData();
-  //   setDeleted(false);
-  // navigation.addListener('focus', () => setLoading(!loading));
-  // }, [deleted, navigation, loading]);
   let total = cartData?.reduce((p, item) => p + item.price * item.quantity, 0);
 
   useEffect(() => {
@@ -68,7 +35,6 @@ const CartScreen = () => {
         });
         setCartData(cartArray);
       });
-    // navigation.addListener('focus', () => setLoading(!loading));
     return () => subscriber();
   }, []);
   return (
@@ -119,22 +85,11 @@ const CartScreen = () => {
           </TouchableOpacity>
         </View>
       )}
-      {/* {cartData.length > 0 || cartData != '' ? (
-        <View style={styles.viewBtn}>
-          <View style={styles.view_Total}>
-            <Text style={styles.text_Total}>Total</Text>
-            <Text style={styles.text_Total}>$100</Text>
-          </View>
-          <TouchableOpacity style={styles.btnCheck}>
-            <Text style={styles.textCheck}>Checkout</Text>
-          </TouchableOpacity>
-        </View>
-      ) : null} */}
     </View>
   );
 };
 
-export default CartScreen;
+export default memo(CartScreen);
 
 const styles = StyleSheet.create({
   container: {

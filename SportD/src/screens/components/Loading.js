@@ -1,10 +1,4 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  ActivityIndicator,
-  SafeAreaView,
-} from 'react-native';
+import {StyleSheet, ActivityIndicator, SafeAreaView} from 'react-native';
 import React from 'react';
 
 const Loading = () => {

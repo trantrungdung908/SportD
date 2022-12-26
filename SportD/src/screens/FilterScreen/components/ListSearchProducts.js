@@ -1,5 +1,5 @@
 import {StyleSheet, Text, View, TouchableOpacity, Image} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {memo} from 'react';
 import Heart from '../../components/Heart';
 import firestore from '@react-native-firebase/firestore';
 import {useDispatch, useSelector} from 'react-redux';
@@ -13,8 +13,6 @@ const ListSearchProducts = props => {
   return (
     <TouchableOpacity
       onPress={() => {
-        // navigation.dispatch(StackActions.replace('Products'));
-
         navigation.navigate('DetailsScreen', {
           item: props.list,
           titleHeader: name,
@@ -105,7 +103,7 @@ const ListSearchProducts = props => {
   );
 };
 
-export default ListSearchProducts;
+export default memo(ListSearchProducts);
 
 const styles = StyleSheet.create({
   view_infoProduct: {

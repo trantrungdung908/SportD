@@ -2,7 +2,6 @@ import {
   StyleSheet,
   Text,
   View,
-  SafeAreaView,
   // StatusBar,
   TextInput,
   Platform,
@@ -11,25 +10,14 @@ import {
   KeyboardAvoidingView,
   Keyboard,
   TouchableWithoutFeedback,
-  ScrollView,
-  InputAccessoryView,
   ActivityIndicator,
-  LogBox,
 } from 'react-native';
-import React, {useState, useEffect} from 'react';
+import React, {useState, memo} from 'react';
 import Feather from 'react-native-vector-icons/Feather';
 import {images} from '../../constants';
 import {useNavigation} from '@react-navigation/native';
-import {useIsFocused} from '@react-navigation/native';
 import FocusAwareStatusBar from '../components/FocusAwareStatusBar';
-import {
-  auth,
-  onAuthStateChanged,
-  ref,
-  set,
-  firebaseData,
-  signInWithEmailAndPassword,
-} from '../../../firebase/config';
+import {auth, signInWithEmailAndPassword} from '../../../firebase/config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {loginFail, loginStart, loginSuccess} from './action';
 import {useDispatch, useSelector} from 'react-redux';
@@ -37,31 +25,12 @@ import ModalError from '../components/ModalError';
 const LoginScreen = props => {
   const navigation = useNavigation();
   const [isShow, setIsShow] = useState(false);
-  const [username, setUsername] = useState('trantrungdung908@gmail.com');
-  const [pass, setPass] = useState('bolobala123!A');
+  const [username, setUsername] = useState('');
+  const [pass, setPass] = useState('');
   const [displayModal, setDisplayModal] = useState(false);
   const [errorMess, setErrorMess] = useState('');
   const dispatch = useDispatch();
   const loading = useSelector(state => state.login.loading);
-  // const handleLogin = () => {
-  //   dispatch(loginStart());
-  //   try {
-  //     signInWithEmailAndPassword(auth, username, pass)
-  //       .then(userCredential => {
-  //         const user = userCredential.user;
-  //         if (user) {
-  //           dispatch(loginSuccess(user));
-  //         }
-  //       })
-  //       .catch(error => {
-  //         const errorCode = error.code;
-  //         alert(errorCode);
-  //         dispatch(loginFail());
-  //       });
-  //   } catch (error) {
-  //     console.log('ERROR LOGIN', error);
-  //   }
-  // };
 
   const handleLogin = async () => {
     dispatch(loginStart());
@@ -118,6 +87,7 @@ const LoginScreen = props => {
                 <TextInput
                   style={styles.textInput}
                   placeholder="Your email"
+                  placeholderTextColor={'#BDBDBD'}
                   autoCapitalize="none"
                   value={username}
                   onChangeText={value => {
@@ -143,6 +113,7 @@ const LoginScreen = props => {
                   }}
                   style={styles.textInput}
                   placeholder="Your password"
+                  placeholderTextColor={'#BDBDBD'}
                   autoCapitalize="none"
                   secureTextEntry={isShow == true ? false : true}
                 />
@@ -192,7 +163,7 @@ const LoginScreen = props => {
   );
 };
 
-export default LoginScreen;
+export default memo(LoginScreen);
 
 const styles = StyleSheet.create({
   container: {

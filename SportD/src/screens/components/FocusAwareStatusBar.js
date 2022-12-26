@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {memo} from 'react';
 import {StatusBar} from 'react-native';
 import {useIsFocused} from '@react-navigation/native';
 const FocusAwareStatusBar = props => {
@@ -7,4 +7,4 @@ const FocusAwareStatusBar = props => {
   return isFocused ? <StatusBar {...props} /> : null;
 };
 
-export default FocusAwareStatusBar;
+export default memo(FocusAwareStatusBar);
