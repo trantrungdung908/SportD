@@ -16,6 +16,7 @@ import SubScreen from './components/SubScreen';
 import Loading from '../components/Loading';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import firestore from '@react-native-firebase/firestore';
+import ToastService from '../../services/ToastService';
 import {useDispatch, useSelector} from 'react-redux';
 
 const Products = () => {
@@ -84,7 +85,7 @@ const Products = () => {
                     {merge: true},
                   )
                   .then(() => {
-                    alert('Product added to wishlist');
+                    ToastService.show('Product added to wishlist');
                   })
                   .catch(err => {
                     console.log(err.code);
@@ -104,7 +105,7 @@ const Products = () => {
                       {merge: true},
                     )
                     .then(() => {
-                      alert('Product removed from wishlist');
+                      ToastService.show('Product removed to wishlist');
                     })
                     .catch(err => {
                       console.log(err.code);
@@ -123,7 +124,7 @@ const Products = () => {
                       {merge: true},
                     )
                     .then(() => {
-                      alert('Product added to wishlist');
+                      ToastService.show('Product added to wishlist');
                     })
                     .catch(err => {
                       console.log(err.code);

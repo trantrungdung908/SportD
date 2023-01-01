@@ -33,7 +33,6 @@ const ProfileScreen = () => {
   const dispatch = useDispatch();
   // state info user
   const [userInfor, setUserInfor] = useState([]);
-  // console.log('userinfo', userInfor);
   const [loading, setLoading] = useState(true);
 
   const alertLogOut = () => {
@@ -74,55 +73,8 @@ const ProfileScreen = () => {
           setUserInfor(documentSnapshot.data());
         }
       })
-      .catch(error => {
-        // console.log(error);
-      });
+      .catch(error => {});
   };
-  // const getUser = async () => {
-  //   let stringUser = await AsyncStorage.getItem('user');
-  //   let myUserId = JSON.parse(stringUser).uid;
-  //   const docRef = doc(databaseStore, 'users', myUserId);
-  //   const docSnap = await getDoc(docRef);
-  //   if (docSnap.exists()) {
-  //     setUserInfor(docSnap.data());
-  //   } else {
-  //     console.log('ERRRO');
-  //   }
-  // };
-  // useEffect(() => {
-  //   getUser();
-
-  //   return () => {};
-  // }, []);
-
-  // useEffect(() => {
-  //   // const query = async () => {
-  //   //   const querySnapshot = await getDocs(usersCollectionRef);
-  //   //   let stringUser = await AsyncStorage.getItem('user');
-  //   //   let myUserId = JSON.parse(stringUser).uid;
-  //   //   querySnapshot.forEach(doc => {
-  //   //     if (doc.data().uid === myUserId) {
-  //   //       setUserInfor({...doc.data(), id: doc.id});
-  //   //     }
-  //   //   });
-  //   // };
-  //   // query();
-  //   const getUser = async () => {
-  //     const data = await getDocs(usersCollectionRef);
-  //     let stringUser = await AsyncStorage.getItem('user');
-  //     let myUserId = JSON.parse(stringUser).uid;
-  //     // data.docs.map(doc => ({...doc.data(), id: doc.id}));
-  //     data.docs.map(doc => {
-  //       if (doc.data().uid === myUserId) {
-  //         setUserInfor({...doc.data(), id: doc.id});
-  //       }
-  //     });
-  //   };
-  //   getUser();
-  //   return () => {
-  //     setUserInfor([]);
-  //   };
-  // }, []);
 
   useEffect(() => {
     getUser();
@@ -258,7 +210,8 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontFamily: 'Poppins-Regular',
     color: colors.primaryColor,
-    marginLeft: 20,
+    marginLeft: 10,
+    marginRight: 35,
   },
   styleIcon: {fontSize: 20, color: '#777777'},
   textInfo: {

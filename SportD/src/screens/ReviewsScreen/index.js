@@ -17,12 +17,15 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import firestore from '@react-native-firebase/firestore';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
+import ToastService from '../../services/ToastService';
 
 const windowHeight = Dimensions.get('window').height;
 
 const ReviewsScreen = () => {
   const userName = useSelector(state => state.login.currentUser.displayName);
+  console.log('USERNAME', userName);
   const userId = useSelector(state => state.login.currentUser.uid);
+  console.log('USERID', userId);
   const route = useRoute();
   const {params} = route;
   const itemData = params.item;
@@ -32,8 +35,6 @@ const ReviewsScreen = () => {
   const [title, setTitle] = useState('');
   const [message, setMessage] = useState('');
   const [review, setReview] = useState([]);
-
-  // const averageRating = review?.reduce((total, next) => total + next.rating, 0) / review?.length;
 
   const averageRating = useMemo(() => {
     return (
@@ -83,6 +84,7 @@ const ReviewsScreen = () => {
           setMessage('');
           setDefaultValue(5);
           setModalVisible(false);
+          ToastService.show('Success');
         })
         .catch(err => {
           console.log(err.code);
@@ -138,7 +140,7 @@ const ReviewsScreen = () => {
         </View>
         {review?.length > 0 ? (
           <View style={styles.viewReviews}>
-            {review
+            {[...review]
               .sort((a, b) => b.reviewAt.seconds - a.reviewAt.seconds)
               .map(item => {
                 return (

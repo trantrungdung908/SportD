@@ -6,6 +6,7 @@ import 'react-native-get-random-values';
 import React from 'react';
 import {Provider} from 'react-redux';
 import {Provider as PaperProvider} from 'react-native-paper';
+import Toast from 'react-native-toast-message';
 import {AppRegistry, Text} from 'react-native';
 import store from './src/redux/store';
 import {PersistGate} from 'redux-persist/integration/react';
@@ -22,6 +23,7 @@ const reduxApp = () => {
         <PersistGate loading={<Loading />} persistor={persistor}>
           <App />
         </PersistGate>
+        <Toast/>
       </PaperProvider>
     </Provider>
   );

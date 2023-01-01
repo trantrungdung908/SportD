@@ -8,7 +8,6 @@ import {
   FlatList,
   TouchableOpacity,
   Platform,
-  Alert,
   ActivityIndicator,
 } from 'react-native';
 import React, {useState, useEffect, useCallback, memo} from 'react';
@@ -17,6 +16,7 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import FocusAwareStatusBar from '../components/FocusAwareStatusBar';
 import firestore from '@react-native-firebase/firestore';
 import {useSelector} from 'react-redux';
+import ToastService from '../../services/ToastService';
 
 const windowWeight = Dimensions.get('window').width;
 const DetailsScreen = props => {
@@ -66,7 +66,7 @@ const DetailsScreen = props => {
     const exist = itemInCart.find(a => a.size === selectSize);
     if (!exist) {
       if (selectSize === undefined) {
-        alert('Please choose your size');
+        ToastService.showError('Please choose your size');
         setLoading(false);
         return;
       } else {
@@ -84,9 +84,7 @@ const DetailsScreen = props => {
           .then(() => {
             setSelectSize();
             setIsSelected();
-            setTimeout(() => {
-              alert('Product added to cart');
-            }, 200);
+            ToastService.show('Product added to cart');
           })
           .catch(err => {
             console.log(err.code);
@@ -112,9 +110,7 @@ const DetailsScreen = props => {
           .then(() => {
             setSelectSize();
             setIsSelected();
-            setTimeout(() => {
-              alert('Product added to cart');
-            }, 200);
+            ToastService.show('Product added to cart');
           })
           .catch(err => {
             console.log(err.code);
@@ -156,9 +152,7 @@ const DetailsScreen = props => {
         .then(() => {
           setSelectSize();
           setIsSelected();
-          setTimeout(() => {
-            alert('Product added to cart');
-          }, 200);
+          ToastService.show('Product added to cart');
         })
         .catch(err => {
           console.log(err.code);
@@ -182,9 +176,7 @@ const DetailsScreen = props => {
           .then(() => {
             setSelectSize();
             setIsSelected();
-            setTimeout(() => {
-              alert('Product added to cart');
-            }, 200);
+            ToastService.show('Product added to cart');
           })
           .catch(err => {
             console.log(err.code);

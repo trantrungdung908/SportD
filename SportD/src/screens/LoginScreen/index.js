@@ -11,6 +11,7 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
   ActivityIndicator,
+  ScrollView,
 } from 'react-native';
 import React, {useState, memo} from 'react';
 import Feather from 'react-native-vector-icons/Feather';
@@ -22,6 +23,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {loginFail, loginStart, loginSuccess} from './action';
 import {useDispatch, useSelector} from 'react-redux';
 import ModalError from '../components/ModalError';
+import ToastService from '../../services/ToastService';
 const LoginScreen = props => {
   const navigation = useNavigation();
   const [isShow, setIsShow] = useState(false);
@@ -41,6 +43,7 @@ const LoginScreen = props => {
           dispatch(loginSuccess(user));
         }
         AsyncStorage.setItem('user', JSON.stringify(user));
+        ToastService.show('Đăng nhập thành công');
       })
       .catch(error => {
         const errorCode = error.code;
@@ -80,7 +83,9 @@ const LoginScreen = props => {
               translucent={true}
             />
             <View style={styles.header}></View>
-            <View style={styles.footer}>
+            <ScrollView
+              style={styles.footer}
+              showsVerticalScrollIndicator={false}>
               <Text style={styles.text_footer}>E-mail</Text>
               <View style={styles.action}>
                 <Feather name="mail" color="#000" size={20} />
@@ -152,7 +157,7 @@ const LoginScreen = props => {
                   <Text style={styles.text_Create}> Create new account</Text>
                 </TouchableOpacity>
               </View>
-            </View>
+            </ScrollView>
             {displayModal === true ? (
               <ModalError errorMess={errorMess} hideModal={handleOverlay} />
             ) : null}

@@ -18,10 +18,13 @@ import Loading from '../components/Loading';
 import colors from '../../constants/colors';
 import firestore from '@react-native-firebase/firestore';
 import ListItem from './components';
+import ToastService from '../../services/ToastService';
+import {useSelector} from 'react-redux';
 
 const windowWeight = Dimensions.get('window').width;
 const HomeScreen = props => {
   const navigation = useNavigation();
+  const user = useSelector(state => state.login.currentUser);
   // const route = useRoute();
   const [categories, setCategories] = useState([]);
   const [dataProducts, setDataProducts] = useState([]);
@@ -38,61 +41,9 @@ const HomeScreen = props => {
 
   Array.prototype.limit = limit;
   //
-  // useEffect(() => {
-  //   firestore()
-  //     .collection('products')
-  //     .get()
-  //     .then(querySnapshot => {
-  //       const dataAll = [];
-  //       querySnapshot.forEach(documentSnapshot => {
-  //         dataAll.push({...documentSnapshot.data(), key: documentSnapshot.id});
-  //       });
-  //       setDataApp(dataAll);
-  //       setLoading(false);
-  //     })
-  //     .catch(error => {
-  //       console.log(error.code);
-  //     });
-
-  //   // const subscriber = firestore()
-  //   //   .collection('products')
-  //   //   .onSnapshot(querySnapshot => {
-  //   //     const dataAll = [];
-  //   //     querySnapshot.forEach(documentSnapshot => {
-  //   //       dataAll.push({...documentSnapshot.data(), key: documentSnapshot.id});
-  //   //     });
-  //   //     setDataApp(dataAll);
-  //   //     setLoading(false);
-  //   //   });
-  //   // return () => subscriber();
-  // }, []);
 
   // useEffect(() => {
-  //   let isMounted = true;
-  //   firestore()
-  //     .collection('categories')
-  //     .get()
-  //     .then(querySnapshot => {
-  //       const categories = [];
-  //       querySnapshot.forEach(documentSnapshot => {
-  //         categories.push({
-  //           ...documentSnapshot.data(),
-  //           key: documentSnapshot.id,
-  //         });
-  //       });
-  //       if (isMounted) {
-  //         setCategories(
-  //           categories.sort((a, b) => a.catName.localeCompare(b.catName)),
-  //         );
-  //         setLoading(false);
-  //       }
-  //     })
-  //     .catch(error => {
-  //       console.log(error.code);
-  //     });
-  //   return () => {
-  //     isMounted = false;
-  //   };
+  //   ToastService.show('Đăng nhập thành công');
   // }, []);
 
   useEffect(() => {

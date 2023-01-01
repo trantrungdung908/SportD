@@ -33,16 +33,21 @@ const SettingsScreen = () => {
             user
               .delete()
               .then(() => {
-                firestore().collection('users').doc(user?.uid).delete();
-                auth
-                  .signOut()
-                  .then(() => {
-                    dispatch(logout());
-                  })
-                  .catch(error => {
-                    console.log(error.code);
-                  });
+                auth.signOut().then(() => {
+                  dispatch(logout());
+                });
               })
+              // .then(() => {
+              //   firestore().collection('users').doc(user?.uid).delete();
+              //   auth
+              //     .signOut()
+              //     .then(() => {
+              //       dispatch(logout());
+              //     })
+              //     .catch(error => {
+              //       console.log(error.message);
+              //     });
+              // })
               .catch(error => console.log(error));
           },
         },

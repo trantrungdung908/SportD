@@ -7,13 +7,12 @@ import {
   LogBox,
   Platform,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import LoginScreen from '../screens/LoginScreen';
 import SignUp from '../screens/SignUpScreen';
 import ForgetScreen from '../screens/ForgetScreen';
 import MainStack from './MainStack';
 import {NavigationContainer} from '@react-navigation/native';
-import {useNavigation} from '@react-navigation/native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 import {createNativeStackNavigator} from '@react-navigation/native-stack';

@@ -21,6 +21,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Animated from 'react-native-reanimated';
 import BottomSheet from 'reanimated-bottom-sheet';
 import ImagePicker from 'react-native-image-crop-picker';
+import ToastService from '../../../services/ToastService';
 const EditProfileScreen = () => {
   const route = useRoute();
   const navigation = useNavigation();
@@ -54,18 +55,20 @@ const EditProfileScreen = () => {
         .doc(myUserId)
         .update(newFields)
         .then(() => {
-          Alert.alert(
-            'Profile Updated!',
-            'Your profile has been updated successfully',
-            [
-              {
-                text: 'OK',
-                onPress: () => {
-                  navigation.goBack();
-                },
-              },
-            ],
-          );
+          ToastService.show('Update Success');
+          navigation.goBack();
+          // Alert.alert(
+          //   'Profile Updated!',
+          //   'Your profile has been updated successfully',
+          //   [
+          //     {
+          //       text: 'OK',
+          //       onPress: () => {
+          //         navigation.goBack();
+          //       },
+          //     },
+          //   ],
+          // );
         })
         .catch(error => {});
     } else {
@@ -82,18 +85,20 @@ const EditProfileScreen = () => {
         .doc(myUserId)
         .update(newFieldsWithUrl)
         .then(() => {
-          Alert.alert(
-            'Profile Updated!',
-            'Your profile has been updated successfully',
-            [
-              {
-                text: 'OK',
-                onPress: () => {
-                  navigation.goBack();
-                },
-              },
-            ],
-          );
+          ToastService.show('Update Success');
+          navigation.goBack();
+          // Alert.alert(
+          //   'Profile Updated!',
+          //   'Your profile has been updated successfully',
+          //   [
+          //     {
+          //       text: 'OK',
+          //       onPress: () => {
+          //         navigation.goBack();
+          //       },
+          //     },
+          //   ],
+          // );
         })
         .catch(error => {});
     }
@@ -255,10 +260,6 @@ const EditProfileScreen = () => {
                 <ImageBackground
                   source={{
                     uri: image,
-                    // uri: image
-                    //   ? image
-                    //   : localState
-                    //   ? localState.userImg ||
                     //     'https://icon-library.com/images/default-user-icon/default-user-icon-13.jpg'
                     //   : 'https://icon-library.com/images/default-user-icon/default-user-icon-13.jpg',
                   }}
