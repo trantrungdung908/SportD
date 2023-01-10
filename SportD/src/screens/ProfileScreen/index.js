@@ -52,9 +52,7 @@ const ProfileScreen = () => {
               .then(() => {
                 dispatch(logout());
               })
-              .catch(error => {
-                console.log(error.code);
-              });
+              .catch(error => {});
           },
         },
       ],

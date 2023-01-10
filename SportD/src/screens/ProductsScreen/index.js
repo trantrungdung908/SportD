@@ -87,9 +87,7 @@ const Products = () => {
                   .then(() => {
                     ToastService.show('Product added to wishlist');
                   })
-                  .catch(err => {
-                    console.log(err.code);
-                  });
+                  .catch(err => {});
               } else {
                 const exist = item.favorite.find(x => x.userId === userId);
                 if (exist) {
@@ -107,9 +105,7 @@ const Products = () => {
                     .then(() => {
                       ToastService.show('Product removed to wishlist');
                     })
-                    .catch(err => {
-                      console.log(err.code);
-                    });
+                    .catch(err => {});
                 } else {
                   firestore()
                     .collection(`products`)
@@ -126,9 +122,7 @@ const Products = () => {
                     .then(() => {
                       ToastService.show('Product added to wishlist');
                     })
-                    .catch(err => {
-                      console.log(err.code);
-                    });
+                    .catch(err => {});
                 }
               }
             }}

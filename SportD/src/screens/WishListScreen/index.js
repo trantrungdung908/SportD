@@ -62,9 +62,7 @@ const WishListScreen = () => {
                     .then(() => {
                       setIsLoading(false);
                     })
-                    .catch(err => {
-                      console.log(err.code);
-                    });
+                    .catch(err => {});
                 }
               }}
               isLike={item?.favorite}

@@ -44,9 +44,7 @@ const ListSearchProducts = props => {
                 .then(() => {
                   alert('Product added to wishlist');
                 })
-                .catch(err => {
-                  console.log(err.code);
-                });
+                .catch(err => {});
             } else {
               const exist = favorite.find(x => x.userId === userId);
               if (exist) {
@@ -64,11 +62,8 @@ const ListSearchProducts = props => {
                   .then(() => {
                     alert('Product removed from wishlist');
                   })
-                  .catch(err => {
-                    console.log(err.code);
-                  });
+                  .catch(err => {});
               } else {
-                console.log('vc');
                 firestore()
                   .collection(`products`)
                   .doc(`${key}`)
@@ -83,9 +78,7 @@ const ListSearchProducts = props => {
                   .then(() => {
                     alert('Product added to wishlist');
                   })
-                  .catch(err => {
-                    console.log(err.code);
-                  });
+                  .catch(err => {});
               }
             }
           }}

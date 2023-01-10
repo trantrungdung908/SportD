@@ -15,7 +15,6 @@ async function requestUserPermission() {
 
 async function getToken() {
   const deviceToken = await messaging().getToken();
-  console.log('Device Token', deviceToken);
 }
 const Notification = () => {
   useEffect(() => {

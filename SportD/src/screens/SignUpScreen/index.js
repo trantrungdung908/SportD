@@ -99,7 +99,6 @@ const SignUp = props => {
         setSuccessMess('Your account has been created.');
       })
       .catch(error => {
-        console.log('ERRORCODE', error.code);
         if (error.code === 'auth/network-request-failed') {
           setErrorMess('No internet connection!!! ');
         }

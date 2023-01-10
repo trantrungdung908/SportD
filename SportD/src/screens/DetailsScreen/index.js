@@ -86,9 +86,7 @@ const DetailsScreen = props => {
             setIsSelected();
             ToastService.show('Product added to cart');
           })
-          .catch(err => {
-            console.log(err.code);
-          })
+          .catch(err => {})
           .finally(() => {
             setLoading(false);
           });
@@ -112,9 +110,7 @@ const DetailsScreen = props => {
             setIsSelected();
             ToastService.show('Product added to cart');
           })
-          .catch(err => {
-            console.log(err.code);
-          })
+          .catch(err => {})
           .finally(() => {
             setLoading(false);
           });
@@ -154,9 +150,7 @@ const DetailsScreen = props => {
           setIsSelected();
           ToastService.show('Product added to cart');
         })
-        .catch(err => {
-          console.log(err.code);
-        })
+        .catch(err => {})
         .finally(() => {
           setLoading(false);
         });
@@ -178,9 +172,7 @@ const DetailsScreen = props => {
             setIsSelected();
             ToastService.show('Product added to cart');
           })
-          .catch(err => {
-            console.log(err.code);
-          })
+          .catch(err => {})
           .finally(() => {
             setLoading(false);
           });

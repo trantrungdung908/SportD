@@ -23,9 +23,7 @@ const windowHeight = Dimensions.get('window').height;
 
 const ReviewsScreen = () => {
   const userName = useSelector(state => state.login.currentUser.displayName);
-  console.log('USERNAME', userName);
   const userId = useSelector(state => state.login.currentUser.uid);
-  console.log('USERID', userId);
   const route = useRoute();
   const {params} = route;
   const itemData = params.item;
@@ -86,9 +84,7 @@ const ReviewsScreen = () => {
           setModalVisible(false);
           ToastService.show('Success');
         })
-        .catch(err => {
-          console.log(err.code);
-        });
+        .catch(err => {});
     }
   }, [title, message, defaultValue]);
 

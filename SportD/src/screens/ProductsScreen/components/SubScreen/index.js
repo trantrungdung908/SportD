@@ -54,9 +54,7 @@ const SubScreen = props => {
                   .then(() => {
                     alert('Product added to wishlist');
                   })
-                  .catch(err => {
-                    console.log(err.code);
-                  });
+                  .catch(err => {});
               } else {
                 const exist = item.favorite.find(x => x.userId === userId);
                 if (exist) {
@@ -74,9 +72,7 @@ const SubScreen = props => {
                     .then(() => {
                       alert('Product removed from wishlist');
                     })
-                    .catch(err => {
-                      console.log(err.code);
-                    });
+                    .catch(err => {});
                 } else {
                   firestore()
                     .collection(`products`)
@@ -92,9 +88,7 @@ const SubScreen = props => {
                     .then(() => {
                       alert('Product added to wishlist');
                     })
-                    .catch(err => {
-                      console.log(err.code);
-                    });
+                    .catch(err => {});
                 }
               }
             }}

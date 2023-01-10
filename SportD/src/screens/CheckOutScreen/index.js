@@ -91,9 +91,7 @@ const CheckOutScreen = () => {
               navigation.navigate('OrderSuccess');
             }, 500);
           })
-          .catch(err => {
-            console.log(err.code);
-          });
+          .catch(err => {});
       })
       .catch(error => {
         // handle failure
@@ -135,9 +133,7 @@ const CheckOutScreen = () => {
             navigation.navigate('OrderSuccess');
           }, 500);
         })
-        .catch(err => {
-          console.log(err.code);
-        });
+        .catch(err => {});
     } else {
       alert('PAYMENT FAILED!!!PLEASE TRY AGAIN OR TRY OTHER PAYMENT METHOD');
       setChecked('Cash on Delivery');
@@ -175,9 +171,7 @@ const CheckOutScreen = () => {
           navigation.navigate('OrderSuccess');
         }, 1500);
       })
-      .catch(err => {
-        console.log(err.code);
-      });
+      .catch(err => {});
   }, [loading, navigation]);
 
   useEffect(() => {
